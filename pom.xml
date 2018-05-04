@@ -5,20 +5,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.boudnik</groupId>
-    <artifactId>ariadne-sql</artifactId>
+    <artifactId>ariadne-core</artifactId>
     <version>1.0.0--SNAPSHOT</version>
 
-    <name>better SQL</name>
+    <name>ariadne</name>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-            <version>1.9.5</version>
+            <version>RELEASE</version>
         </dependency>
     </dependencies>
     <build>
@@ -26,7 +26,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
+                <version>RELEASE</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
