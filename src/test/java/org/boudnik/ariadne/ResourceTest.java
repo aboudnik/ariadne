@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 /**
@@ -31,6 +32,7 @@ public class ResourceTest {
         when(resource.prerequisites()).thenReturn(new HashSet<>(Collections.singletonList(prerequisite)));
         when(resource.type()).thenReturn("Test");
         when(resource.isSatisfied()).thenCallRealMethod();
+        doThrow(new RuntimeException()).when(resource).build();
 
         when(prerequisite.isReady()).thenReturn(true);
     }
@@ -40,8 +42,9 @@ public class ResourceTest {
         assertSame("Test", resource.type());
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void build() {
+        resource.build();
     }
 
     @Test
