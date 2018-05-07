@@ -7,8 +7,9 @@ import java.util.Collection;
  * @since 5/7/2018
  */
 //rfs == resource facing service
-public class Rfs extends Service{
+public class Rfs extends Service {
     private Collection<Rfs> secondLayerRfses; //could be null
+
     public Rfs(String id, String name, String serviceSpecification) {
         super(id, name, serviceSpecification);
     }
