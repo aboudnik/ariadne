@@ -9,7 +9,7 @@ import java.util.Set;
  * @author Sergey Nuyanzin
  * @since 5/8/2018
  */
-public class LocationCondition implements Resource {
+public class LocationCondition {
     private String regionId;
     private String cityId;
     private String buildingId;
@@ -64,22 +64,6 @@ public class LocationCondition implements Resource {
         this.deviceId = deviceId;
         return this;
     }
-
-    @Override
-    public String type() {
-        return "LocationPrerequisite";
-    }
-
-    @Override
-    public Set<Resource> prerequisites() {
-        return Collections.singleton(this);
-    }
-
-    @Override
-    public boolean isReady() {
-        return true;
-    }
-
 
     @Override
     public String toString() {

@@ -8,21 +8,21 @@ import java.sql.Timestamp;
  */
 public class Device32ports {
     private static final int NUMBER_OF_PORTS = 32;
-    private ResourceInventoryLocation resourceInventoryLocation;
+    private RILocation resourceInventoryLocation;
     private String physicalStatus;
     private String logicalStatus;
     private String softwareVersion;
     private Timestamp lastSoftwareUpdateDate;
     private final Port[] ports = new Port[NUMBER_OF_PORTS];
 
-    public Device32ports(ResourceInventoryLocation resourceInventoryLocation) {
+    public Device32ports(RILocation resourceInventoryLocation) {
         this.resourceInventoryLocation = resourceInventoryLocation;
         for (int i = 0; i < NUMBER_OF_PORTS; i++) {
             ports[i] = new Port(i, this);
         }
     }
 
-    public ResourceInventoryLocation getResourceInventoryLocation() {
+    public RILocation getResourceInventoryLocation() {
         return resourceInventoryLocation;
     }
 
