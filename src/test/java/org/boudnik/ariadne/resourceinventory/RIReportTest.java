@@ -38,7 +38,6 @@ public class RIReportTest {
         assertSame("RIResource", riResource.type());
     }
 
-    @Test(expected = RuntimeException.class)
     public void build() {
         riResource.build();
     }
