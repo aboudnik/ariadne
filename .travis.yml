@@ -1,4 +1,7 @@
 # simple yml
 language: java
 sudo: true
-script: mvn clean verify 
+script: mvn clean verify
+addons:
+    apt:
+      update: true
