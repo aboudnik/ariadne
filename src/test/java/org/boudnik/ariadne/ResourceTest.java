@@ -32,7 +32,7 @@ public class ResourceTest {
         when(resource.prerequisites()).thenReturn(new HashSet<>(Collections.singletonList(prerequisite)));
         when(resource.type()).thenReturn("Test");
         when(resource.isSatisfied()).thenCallRealMethod();
-        doThrow(new RuntimeException()).when(resource).build();
+        doThrow(new RuntimeException()).when(resource).build(null);
 
         when(prerequisite.isReady()).thenReturn(true);
     }
@@ -44,7 +44,7 @@ public class ResourceTest {
 
     @Test(expected = RuntimeException.class)
     public void build() {
-        resource.build();
+        resource.build(null);
     }
 
     @Test

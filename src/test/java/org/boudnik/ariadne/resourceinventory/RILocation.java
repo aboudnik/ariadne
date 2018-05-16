@@ -38,4 +38,5 @@ public class RILocation {
     public String getDeviceId() {
         return deviceId;
     }
+
 }

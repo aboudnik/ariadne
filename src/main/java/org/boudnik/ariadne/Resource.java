@@ -6,18 +6,18 @@ import java.util.Set;
  * @author Alexandre_Boudnik
  * @since 05/04/2018
  */
-public interface Resource {
+public interface Resource<DATA> {
 
     String type();
 
     /**
      * Supposed to build this
      */
-    default void build() {
-
+    default void build(Loader<DATA> loader) {
     }
 
-    Set<Resource> prerequisites();
+    <R extends Resource> Set<R> prerequisites();
+
 
     boolean isReady();
 

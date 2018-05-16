@@ -1,44 +1,47 @@
 package org.boudnik.ariadne.resourceinventory;
 
+import org.boudnik.ariadne.Loader;
 import org.boudnik.ariadne.Resource;
 
-import java.util.Collections;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * @author Sergey Nuyanzin
  * @since 5/8/2018
  */
-public class RIResource implements Resource {
-    private LocationCondition location;
-    private RIReportOutputColumns outputColumns;
+public class RIResource implements Resource<Collection<Device32ports>> {
+    private String name;
+    private Set<LocationResource<Device32ports>> locationResources = new HashSet<>();
 
-    public LocationCondition getLocation() {
-        return location;
-    }
-
-    public RIResource setLocation(LocationCondition location) {
-        this.location = location;
+    public RIResource addLocationCondition(Predicate<Device32ports> locationResource) {
+        this.locationResources.add(new LocationResource<>(locationResource));
         return this;
     }
 
-    public RIReportOutputColumns getOutputColumns() {
-        return outputColumns;
+    public void build(Loader<Collection<Device32ports>> loader) {
+        System.out.println("start build");
+        Stream<Device32ports> stream = loader.getData().stream();
+        System.out.println("start build");
+        for (LocationResource r : prerequisites()) {
+            stream = stream.filter(r.getPredicate());
+        }
+        stream.forEach(System.out::println);
     }
 
-    public RIResource setOutputColumns(RIReportOutputColumns outputColumns) {
-        this.outputColumns = outputColumns;
-        return this;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
     public String type() {
-        return "RIResource";
+        return name;
     }
 
     @Override
-    public Set<Resource> prerequisites() {
-        return Collections.singleton(this);
+    public Set<LocationResource<Device32ports>> prerequisites() {
+        return locationResources;
     }
 
     @Override
@@ -49,8 +52,7 @@ public class RIResource implements Resource {
     @Override
     public String toString() {
         return "RIResource{" +
-                "location=" + location +
-                ", outputColumns=" + outputColumns +
+                "locationResources=" + locationResources +
                 '}';
     }
 }
