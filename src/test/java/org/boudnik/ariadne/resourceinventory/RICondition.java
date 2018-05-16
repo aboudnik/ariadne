@@ -10,10 +10,10 @@ import java.util.function.Predicate;
  * @author Sergey Nuyanzin
  * @since 5/15/2018
  */
-public class LocationResource<T> implements Resource {
+public class RICondition<T> implements Resource {
     private final Predicate<T> predicate;
 
-    public LocationResource(Predicate<T> predicate) {
+    public RICondition(Predicate<T> predicate) {
         this.predicate = predicate;
     }
 

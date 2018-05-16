@@ -11,20 +11,18 @@ import java.util.stream.Stream;
  * @author Sergey Nuyanzin
  * @since 5/8/2018
  */
-public class RIResource implements Resource<Collection<Device32ports>> {
+public class RIResource implements Resource<Collection<Device>> {
     private String name;
-    private Set<LocationResource<Device32ports>> locationResources = new HashSet<>();
+    private Set<RICondition<Device>> locationResources = new HashSet<>();
 
-    public RIResource addLocationCondition(Predicate<Device32ports> locationResource) {
-        this.locationResources.add(new LocationResource<>(locationResource));
+    public RIResource addCondition(Predicate<Device> locationResource) {
+        this.locationResources.add(new RICondition<>(locationResource));
         return this;
     }
 
-    public void build(Loader<Collection<Device32ports>> loader) {
-        System.out.println("start build");
-        Stream<Device32ports> stream = loader.getData().stream();
-        System.out.println("start build");
-        for (LocationResource r : prerequisites()) {
+    public void build(Loader<Collection<Device>> loader) {
+        Stream<Device> stream = loader.getData().stream();
+        for (RICondition r : prerequisites()) {
             stream = stream.filter(r.getPredicate());
         }
         stream.forEach(System.out::println);
@@ -40,7 +38,7 @@ public class RIResource implements Resource<Collection<Device32ports>> {
     }
 
     @Override
-    public Set<LocationResource<Device32ports>> prerequisites() {
+    public Set<RICondition<Device>> prerequisites() {
         return locationResources;
     }
 
