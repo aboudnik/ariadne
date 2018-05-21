@@ -7,6 +7,7 @@ import java.sql.Timestamp;
  * @since 5/16/2018
  */
 public abstract class Device {
+
     private RILocation resourceInventoryLocation;
     private DevicePhysicalStatus physicalStatus;
     private DeviceLogicalStatus logicalStatus;
@@ -67,7 +68,7 @@ public abstract class Device {
 
         private final String status;
 
-        DeviceLogicalStatus(String status){
+        DeviceLogicalStatus(String status) {
             this.status = status;
         }
     }
@@ -79,7 +80,7 @@ public abstract class Device {
 
         private final String status;
 
-        DevicePhysicalStatus(String status){
+        DevicePhysicalStatus(String status) {
             this.status = status;
         }
     }

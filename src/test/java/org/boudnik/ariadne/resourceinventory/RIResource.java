@@ -3,8 +3,11 @@ package org.boudnik.ariadne.resourceinventory;
 import org.boudnik.ariadne.Loader;
 import org.boudnik.ariadne.Resource;
 
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -13,17 +16,22 @@ import java.util.stream.Stream;
  */
 public class RIResource implements Resource<Collection<Device>> {
     private String name;
-    private Set<RICondition<Device>> locationResources = new HashSet<>();
+    private Set<RICondition> locationResources = new HashSet<>();
 
-    public RIResource addCondition(Predicate<Device> locationResource) {
-        this.locationResources.add(new RICondition<>(locationResource));
-        return this;
+    public RIResource addCondition(Function<Device, ?> function2getValue, Object value) {
+        try {
+            this.locationResources.add(new RICondition(function2getValue, value));
+            return this;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     public void build(Loader<Collection<Device>> loader) {
         Stream<Device> stream = loader.getData().stream();
         for (RICondition r : prerequisites()) {
-            stream = stream.filter(r.getPredicate());
+            stream = stream.filter(device -> Objects.equals(r.getValue(), r.getFunction2getValue().apply(device)));
         }
         stream.forEach(System.out::println);
     }
@@ -38,7 +46,7 @@ public class RIResource implements Resource<Collection<Device>> {
     }
 
     @Override
-    public Set<RICondition<Device>> prerequisites() {
+    public Set<RICondition> prerequisites() {
         return locationResources;
     }
 

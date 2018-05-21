@@ -4,17 +4,19 @@ import org.boudnik.ariadne.Resource;
 
 import java.util.Collections;
 import java.util.Set;
-import java.util.function.Predicate;
+import java.util.function.Function;
 
 /**
  * @author Sergey Nuyanzin
  * @since 5/15/2018
  */
 public class RICondition<T> implements Resource {
-    private final Predicate<T> predicate;
+    private final Function<T, ?> function2getValue;
+    private final Object value;
 
-    public RICondition(Predicate<T> predicate) {
-        this.predicate = predicate;
+    public RICondition(Function<T, ?> function2getValue, Object value) {
+        this.function2getValue = function2getValue;
+        this.value = value;
     }
 
     @Override
@@ -26,8 +28,12 @@ public class RICondition<T> implements Resource {
 
     }
 
-    public Predicate<T> getPredicate() {
-        return predicate;
+    public Function<T, ?> getFunction2getValue() {
+        return function2getValue;
+    }
+
+    public Object getValue() {
+        return value;
     }
 
     @Override

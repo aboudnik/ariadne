@@ -9,6 +9,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Function;
 
 /**
  * @author Sergey Nuyanzin
@@ -32,10 +33,12 @@ public class RIReportTest {
             add(new Device32ports(new RILocation("region1", "city3", "building1", "rack2", "device2")).setLogicalStatus(Device.DeviceLogicalStatus.ACTIVE));
         }};
 
-        riResource.addCondition(device32ports -> device32ports.getResourceInventoryLocation().getRegionId().equals("region1"));
-        riResource.addCondition(device32ports -> device32ports.getResourceInventoryLocation().getCityId().equals("city1"));
-        riResource.addCondition(device32ports -> device32ports.getResourceInventoryLocation().getBuildingId().equals("building1"));
-        riResource.addCondition(device32ports -> device32ports.getLogicalStatus() == Device.DeviceLogicalStatus.ACTIVE);
+
+        riResource.addCondition((Function<Device, String>) device -> device.getResourceInventoryLocation().getRegionId(), "region1");
+        riResource.addCondition((Function<Device, String>) device -> device.getResourceInventoryLocation().getCityId(), "city1");
+        riResource.addCondition((Function<Device, String>) device -> device.getResourceInventoryLocation().getBuildingId(), "building1");
+        riResource.addCondition((Function<Device, Device.DeviceLogicalStatus>) Device::getLogicalStatus, Device.DeviceLogicalStatus.ACTIVE);
+
     }
 
     @Test
