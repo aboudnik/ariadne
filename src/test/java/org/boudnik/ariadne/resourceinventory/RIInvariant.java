@@ -10,11 +10,11 @@ import java.util.function.Function;
  * @author Sergey Nuyanzin
  * @since 5/15/2018
  */
-public class RICondition<T> implements Resource {
+public class RIInvariant<T> implements Resource {
     private final Function<T, ?> function2getValue;
     private final Object value;
 
-    public RICondition(Function<T, ?> function2getValue, Object value) {
+    public RIInvariant(Function<T, ?> function2getValue, Object value) {
         this.function2getValue = function2getValue;
         this.value = value;
     }

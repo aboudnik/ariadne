@@ -16,11 +16,11 @@ import java.util.stream.Stream;
  */
 public class RIResource implements Resource<Collection<Device>> {
     private String name;
-    private Set<RICondition> locationResources = new HashSet<>();
+    private Set<RIInvariant> locationResources = new HashSet<>();
 
     public RIResource addCondition(Function<Device, ?> function2getValue, Object value) {
         try {
-            this.locationResources.add(new RICondition(function2getValue, value));
+            this.locationResources.add(new RIInvariant(function2getValue, value));
             return this;
         } catch (Exception e) {
             e.printStackTrace();
@@ -30,7 +30,7 @@ public class RIResource implements Resource<Collection<Device>> {
 
     public void build(Loader<Collection<Device>> loader) {
         Stream<Device> stream = loader.getData().stream();
-        for (RICondition r : prerequisites()) {
+        for (RIInvariant r : prerequisites()) {
             stream = stream.filter(device -> Objects.equals(r.getValue(), r.getFunction2getValue().apply(device)));
         }
         stream.forEach(System.out::println);
@@ -46,7 +46,7 @@ public class RIResource implements Resource<Collection<Device>> {
     }
 
     @Override
-    public Set<RICondition> prerequisites() {
+    public Set<RIInvariant> prerequisites() {
         return locationResources;
     }
 
