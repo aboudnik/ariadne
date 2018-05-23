@@ -8,7 +8,9 @@ import java.util.Set;
  */
 public interface Resource<DATA> {
 
-    String type();
+    default String type() {
+        return getClass().getName();
+    }
 
     /**
      * Supposed to build this

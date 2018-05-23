@@ -44,11 +44,6 @@ public class RILocation implements Resource {
     }
 
     @Override
-    public String type() {
-        return null;
-    }
-
-    @Override
     public boolean isReady() {
         return false;
     }

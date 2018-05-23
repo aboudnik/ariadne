@@ -19,11 +19,6 @@ public class RIInvariant<T> implements Resource {
         this.value = value;
     }
 
-    @Override
-    public String type() {
-        return null;
-    }
-
     public void build() {
 
     }
