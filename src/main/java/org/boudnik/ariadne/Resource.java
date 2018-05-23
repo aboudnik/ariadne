@@ -1,5 +1,8 @@
 package org.boudnik.ariadne;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
@@ -18,7 +21,13 @@ public interface Resource<DATA> {
     default void build(Loader<DATA> loader) {
     }
 
-    <R extends Resource> Set<R> prerequisites();
+    default Set<? extends Resource> prerequisites() {
+        return Collections.emptySet();
+    }
+
+    default Map<String, ?> dimensions() {
+        throw new NoSuchElementException();
+    };
 
 
     boolean isReady();

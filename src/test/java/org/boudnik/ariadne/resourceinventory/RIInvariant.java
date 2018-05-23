@@ -32,7 +32,7 @@ public class RIInvariant<T> implements Resource {
     }
 
     @Override
-    public Set<Resource> prerequisites() {
+    public Set<? extends Resource> prerequisites() {
         return Collections.singleton(this);
     }
 
