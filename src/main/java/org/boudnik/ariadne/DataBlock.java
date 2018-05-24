@@ -27,7 +27,8 @@ public abstract class DataBlock<R> implements Resource {
         }
     }
 
-    protected final Map<String, Object> dimensions() {
+    @Override
+    public final Map<String, Object> dimensions() {
         return dimensions;
     }
 
@@ -37,4 +38,9 @@ public abstract class DataBlock<R> implements Resource {
     }
 
     protected abstract R record();
+
+    @Override
+    public String build(DataFactory dataFactory) {
+        return "file:///base/" + type();
+    }
 }

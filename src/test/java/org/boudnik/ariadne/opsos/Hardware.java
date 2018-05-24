@@ -4,6 +4,7 @@ import org.boudnik.ariadne.DataBlock;
 import org.boudnik.ariadne.Dimension;
 import org.boudnik.ariadne.Resource;
 
+import java.net.URL;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;

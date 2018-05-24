@@ -1,12 +1,11 @@
-package org.boudnik.ariadne.opsos.test;
+package org.boudnik.ariadne;
 
+import org.boudnik.ariadne.DataFactory;
 import org.boudnik.ariadne.Dimension;
 import org.boudnik.ariadne.opsos.Device;
 import org.boudnik.ariadne.opsos.Usage;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.List;
 
 /**
  * @author Alexandre_Boudnik
@@ -16,6 +15,7 @@ public class UsageTest {
 
     private Usage usage;
     private Device device;
+    private DataFactory factory;
 
     @Before
     public void setUp() throws Exception {
@@ -29,6 +29,7 @@ public class UsageTest {
                 new Dimension("state", "VA"),
                 new Dimension("city", "Leesburg"),
                 new Dimension("operational", true));
+        factory = new DataFactory();
     }
 
     @Test
@@ -51,7 +52,21 @@ public class UsageTest {
     }
 
     @Test
-    public void build() {
+    public void print() {
         usage.print(0);
+    }
+
+    @Test
+    public void buildAndCache() {
+        factory.LOGGER.info("device = " + factory.build(usage));
+        factory.LOGGER.info("*");
+        factory.LOGGER.info("device = " + factory.build(usage));
+    }
+
+    @Test
+    public void buildAndCachePartual() {
+        factory.LOGGER.info("device = " + factory.build(device));
+        factory.LOGGER.info("*");
+        factory.LOGGER.info("device = " + factory.build(usage));
     }
 }

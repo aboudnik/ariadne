@@ -7,10 +7,44 @@ import java.util.function.BiConsumer;
  * @author Alexandre_Boudnik
  * @since 05/04/2018
  */
-public interface Resource<DATA> {
+public interface Resource {
+
+    class Key {
+        String type;
+        Map<String, Object> dimensions;
+
+        Key(String type, Map<String, Object> dimensions) {
+            this.type = type;
+            this.dimensions = dimensions;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
+            Key key = (Key) o;
+            return Objects.equals(type, key.type) && Objects.equals(dimensions, key.dimensions);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(type, dimensions);
+        }
+
+        @Override
+        public String toString() {
+            return type + dimensions;
+        }
+    }
+
+    default Key key() {
+        return new Key(type(), dimensions());
+    }
 
     default String type() {
-        return getClass().getSimpleName();
+        return getClass().getTypeName();
     }
 
     default void print(boolean trace) {
@@ -50,4 +84,8 @@ public interface Resource<DATA> {
         }
         return sink;
     }
+
+    Map<String, Object> dimensions();
+
+    String build(DataFactory dataFactory);
 }
