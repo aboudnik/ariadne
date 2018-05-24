@@ -37,14 +37,14 @@ public class Usage extends DataBlock<Usage.Record> {
         return new HashSet<>(Arrays.asList(
                 new Traffic(
                         DG.generate(dimensions,
-                                new HashMap<String, Supplier>(){{
+                                new HashMap<String, Supplier>() {{
                                     put("month", () -> "month");
                                     put("state", () -> "state");
                                 }})
                 ),
                 new Device(
                         DG.generate(dimensions,
-                                new HashMap<String, Supplier>(){{
+                                new HashMap<String, Supplier>() {{
                                     put("state", () -> "state");
                                     put("city", () -> "city");
                                     put("month", () -> "month");
@@ -53,7 +53,7 @@ public class Usage extends DataBlock<Usage.Record> {
                 ).as("offline"),
                 new Device(
                         DG.generate(dimensions,
-                                new HashMap<String, Supplier>(){{
+                                new HashMap<String, Supplier>() {{
                                     put("state", () -> "state");
                                     put("city", () -> "city");
                                     put("month", () -> "month");

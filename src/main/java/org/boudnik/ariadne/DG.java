@@ -12,14 +12,14 @@ public class DG {
     public static Dimension[] generate(Map<String, ?> dimensionsMap, Map<String, ?> limitationMap) {
         Dimension[] dimensions = new Dimension[limitationMap.size()];
         int i = 0;
-        for(Map.Entry<String, ?> limitationMapEntry: limitationMap.entrySet()) {
+        for (Map.Entry<String, ?> limitationMapEntry : limitationMap.entrySet()) {
             Object value = limitationMapEntry.getValue();
             Object dimensionLimit;
             dimensions[i] =
                     (value instanceof Supplier
                             && (dimensionLimit = ((Supplier) value).get()) instanceof String)
-                        ? new Dimension(limitationMapEntry.getKey(), dimensionsMap.get(dimensionLimit))
-                        : new Dimension(limitationMapEntry.getKey(), value);
+                            ? new Dimension(limitationMapEntry.getKey(), dimensionsMap.get(dimensionLimit))
+                            : new Dimension(limitationMapEntry.getKey(), value);
             i++;
         }
         return dimensions;
