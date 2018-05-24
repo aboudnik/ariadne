@@ -9,13 +9,17 @@ import java.net.URL;
  * @since 05/22/2018
  */
 public class DataSource {
-    private final URL url;
+    private final String template;
 
-    public DataSource(URL url) {
-        this.url = url;
+    public DataSource(String template) {
+        this.template = template;
     }
 
     public InputStream openStream() throws IOException {
-        return url.openStream();
+        return new URL(template).openStream();
+    }
+
+    public String getTemplate() {
+        return template;
     }
 }

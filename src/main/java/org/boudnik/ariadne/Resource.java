@@ -1,7 +1,10 @@
 package org.boudnik.ariadne;
 
+import java.io.PrintStream;
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * @author Alexandre_Boudnik
@@ -47,18 +50,15 @@ public interface Resource {
         return getClass().getTypeName();
     }
 
-    default void print(boolean trace) {
-        print(trace ? 0 : -1);
-    }
-
-    default void print(int indent) {
-        for (int i = 0; i < indent; i++)
-            System.out.print(" ");
-        if (indent >= 0)
-            System.out.println("building " + this);
-        for (Resource resource : prerequisites()) {
-            resource.print(indent >= 0 ? indent + 1 : indent);
-        }
+    default void print() {
+        walk(0,
+                indent -> indent + 1,
+                (resource, indent) -> {
+                    for (int i = 0; i < indent; i++)
+                        System.out.print(" ");
+                    System.out.println(resource);
+                },
+                indent -> indent - 1);
     }
 
     default Set<? extends Resource> prerequisites() {
@@ -78,14 +78,18 @@ public interface Resource {
     }
 
     default <C> C walk(C sink, BiConsumer<Resource, C> collector) {
+        return walk(sink, x -> x, collector, x -> x);
+    }
+
+    default <C> C walk(C sink, Function<C, C> enter, BiConsumer<Resource, C> collector, Function<C, C> leave) {
         collector.accept(this, sink);
         for (Resource resource : prerequisites()) {
-            resource.walk(sink, collector);
+            resource.walk(enter.apply(sink), enter, collector, leave);
         }
-        return sink;
+        return leave.apply(sink);
     }
 
     Map<String, Object> dimensions();
 
-    String build(DataFactory dataFactory);
+    String build(DataFactory factory);
 }

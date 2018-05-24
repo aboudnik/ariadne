@@ -2,11 +2,12 @@ package org.boudnik.ariadne.opsos;
 
 import org.boudnik.ariadne.DataBlock;
 import org.boudnik.ariadne.Dimension;
-import org.boudnik.ariadne.DG;
 import org.boudnik.ariadne.Resource;
 
-import java.util.*;
-import java.util.function.Supplier;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Alexandre_Boudnik
@@ -36,29 +37,20 @@ public class Usage extends DataBlock<Usage.Record> {
         Map<String, ?> dimensions = dimensions();
         return new HashSet<>(Arrays.asList(
                 new Traffic(
-                        DG.generate(dimensions,
-                                new HashMap<String, Supplier>() {{
-                                    put("month", () -> "month");
-                                    put("state", () -> "state");
-                                }})
+                        new Dimension("month", dimensions.get("month")),
+                        new Dimension("state", dimensions.get("state"))
                 ),
                 new Device(
-                        DG.generate(dimensions,
-                                new HashMap<String, Supplier>() {{
-                                    put("state", () -> "state");
-                                    put("city", () -> "city");
-                                    put("month", () -> "month");
-                                    put("operational", () -> false);
-                                }})
+                        new Dimension("state", dimensions.get("state")),
+                        new Dimension("city", dimensions.get("city")),
+                        new Dimension("month", dimensions.get("month")),
+                        new Dimension("operational", false)
                 ).as("offline"),
                 new Device(
-                        DG.generate(dimensions,
-                                new HashMap<String, Supplier>() {{
-                                    put("state", () -> "state");
-                                    put("city", () -> "city");
-                                    put("month", () -> "month");
-                                    put("operational", () -> true);
-                                }})
+                        new Dimension("state", dimensions.get("state")),
+                        new Dimension("city", dimensions.get("city")),
+                        new Dimension("month", dimensions.get("month")),
+                        new Dimension("operational", true)
                 ).as("online")
         ));
     }

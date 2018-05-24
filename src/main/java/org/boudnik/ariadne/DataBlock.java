@@ -40,7 +40,8 @@ public abstract class DataBlock<R> implements Resource {
     protected abstract R record();
 
     @Override
-    public String build(DataFactory dataFactory) {
-        return "file:///base/" + type();
+    public String build(DataFactory factory) {
+        DataFactory.LOGGER.fine((factory.get(key()) == null ? "BUILD " : "----- ") + key());
+        return "file:///ephemeral/" + type();
     }
 }

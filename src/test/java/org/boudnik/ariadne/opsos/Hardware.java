@@ -1,20 +1,13 @@
 package org.boudnik.ariadne.opsos;
 
-import org.boudnik.ariadne.DataBlock;
 import org.boudnik.ariadne.Dimension;
-import org.boudnik.ariadne.Resource;
-
-import java.net.URL;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import org.boudnik.ariadne.External;
 
 /**
  * @author Alexandre_Boudnik
  * @since 05/18/2018
  */
-public class Hardware extends DataBlock<Hardware.Record> {
+public class Hardware extends External<Hardware.Record> {
     public static class Record {
         int device;
         String state;

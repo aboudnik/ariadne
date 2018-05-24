@@ -18,17 +18,19 @@ import static org.junit.Assert.*;
 public class DataSourceTest {
 
     private URL url;
+    private String spec;
 
     @Before
     public void setUp() throws Exception {
         System.out.println(new File(".").getAbsolutePath());
-        Path path = Paths.get( "src", "test", "data", "opsos", "devices.csv");
-        url = new URL("file:///" + path.toAbsolutePath().toString());
+        Path path = Paths.get("src", "test", "data", "opsos", "devices.csv");
+        spec = "file:///" + path.toAbsolutePath().toString();
+        url = new URL(spec);
     }
 
     @Test
     public void openFileStream() throws IOException {
-        DataSource dataSource = new DataSource(url);
+        DataSource dataSource = new DataSource(spec);
         InputStream inputStream = dataSource.openStream();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             for (String line; (line = reader.readLine()) != null; ) {

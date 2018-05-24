@@ -1,5 +1,6 @@
 package org.boudnik.ariadne.opsos;
 
+import org.boudnik.ariadne.DataBlock;
 import org.boudnik.ariadne.Dimension;
 import org.boudnik.ariadne.Resource;
 
@@ -12,12 +13,17 @@ import java.util.Set;
  * @author Alexandre_Boudnik
  * @since 05/18/2018
  */
-public class Device extends Hardware {
+public class Device extends DataBlock<Hardware.Record> {
 
     public Device(Dimension... dimensions) {
         super(dimensions);
     }
 
+    @Override
+    protected Hardware.Record record() {
+        return new Hardware.Record();
+    }
+    
     @Override
     public Set<? extends Resource> prerequisites() {
         Map<String, ?> dimensions = dimensions();
