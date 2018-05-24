@@ -32,7 +32,6 @@ public class ResourceTest {
         when(resource.prerequisites()).thenReturn(new HashSet<>(Collections.singletonList(prerequisite)));
         when(resource.type()).thenReturn("Test");
         when(resource.isSatisfied()).thenCallRealMethod();
-        doThrow(new RuntimeException()).when(resource).build(null);
 
         when(prerequisite.isReady()).thenReturn(true);
     }
@@ -40,11 +39,6 @@ public class ResourceTest {
     @Test
     public void type() {
         assertSame("Test", resource.type());
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void build() {
-        resource.build(null);
     }
 
     @Test
@@ -58,11 +52,6 @@ public class ResourceTest {
     public void isReady() {
         assertTrue(prerequisite.isReady());
         assertFalse(resource.isReady());
-    }
-
-    @Test
-    public void isSatisfied() {
-        assertTrue(resource.isSatisfied());
     }
 
     @After

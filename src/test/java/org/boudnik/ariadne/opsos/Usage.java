@@ -36,13 +36,23 @@ public class Usage extends DataBlock<Usage.Record> {
     public Set<? extends Resource> prerequisites() {
         Map<String, ?> dimensions = dimensions();
         return new HashSet<>(Arrays.asList(
-                new Traffic(new Dimension("month", dimensions.get("month")), new Dimension("state", dimensions.get("state"))),
-                new Device(new Dimension("state", dimensions.get("state")), new Dimension("city", dimensions.get("city"))))
-        );
+                new Traffic(
+                        new Dimension("month", dimensions.get("month")),
+                        new Dimension("state", dimensions.get("state"))
+                ),
+                new Device(
+                        new Dimension("state", dimensions.get("state")),
+                        new Dimension("city", dimensions.get("city")),
+                        new Dimension("month", dimensions.get("month")),
+                        new Dimension("operational", false)
+                ).as("offline"),
+                new Device(
+                        new Dimension("state", dimensions.get("state")),
+                        new Dimension("city", dimensions.get("city")),
+                        new Dimension("month", dimensions.get("month")),
+                        new Dimension("operational", true)
+                ).as("online")
+        ));
     }
 
-    @Override
-    public boolean isReady() {
-        return false;
-    }
 }

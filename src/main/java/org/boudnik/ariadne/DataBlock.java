@@ -1,14 +1,25 @@
 package org.boudnik.ariadne;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * @author Alexandre_Boudnik
  * @since 05/23/2018
  */
 public abstract class DataBlock<R> implements Resource {
-    private final Map<String, Object> dimensions = new HashMap<>();
+    private final SortedMap<String, Object> dimensions = new TreeMap<>();
+    private String alias;
+
+    public final DataBlock<R> as(String alias) {
+        this.alias = alias;
+        return this;
+    }
+
+    public String type() {
+        return alias == null ? Resource.super.type() : alias;
+    }
 
     public DataBlock(Dimension... dimensions) {
         for (Dimension dimension : dimensions) {
@@ -16,14 +27,13 @@ public abstract class DataBlock<R> implements Resource {
         }
     }
 
-    @Override
-    public final Map<String, Object> dimensions() {
+    protected final Map<String, Object> dimensions() {
         return dimensions;
     }
 
     @Override
     public String toString() {
-        return "{" + getClass().getSimpleName() + " " + dimensions + "}";
+        return "{" + type() + " " + dimensions + "}";
     }
 
     protected abstract R record();
