@@ -3,12 +3,11 @@ package org.boudnik.ariadne;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static org.junit.Assert.*;
 
@@ -22,7 +21,9 @@ public class DataSourceTest {
 
     @Before
     public void setUp() throws Exception {
-        url = new URL("file:///Projects/ariadne/src/test/data/opsos/devices.csv");
+        System.out.println(new File(".").getAbsolutePath());
+        Path path = Paths.get( "src", "test", "data", "opsos", "devices.csv");
+        url = new URL("file:///" + path.toAbsolutePath().toString());
     }
 
     @Test
