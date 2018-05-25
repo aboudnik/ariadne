@@ -1,3 +1,4 @@
+/*
 package org.boudnik.ariadne;
 
 import org.junit.After;
@@ -15,10 +16,12 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
+*/
 /**
  * @author Alexandre_Boudnik
  * @since 05/04/2018
- */
+ *//*
+
 @RunWith(MockitoJUnitRunner.class)
 public class ResourceTest {
     @Mock
@@ -32,7 +35,6 @@ public class ResourceTest {
         when(resource.prerequisites()).thenReturn(new HashSet<>(Collections.singletonList(prerequisite)));
         when(resource.type()).thenReturn("Test");
         when(resource.isSatisfied()).thenCallRealMethod();
-        doThrow(new RuntimeException()).when(resource).build();
 
         when(prerequisite.isReady()).thenReturn(true);
     }
@@ -40,11 +42,6 @@ public class ResourceTest {
     @Test
     public void type() {
         assertSame("Test", resource.type());
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void build() {
-        resource.build();
     }
 
     @Test
@@ -60,12 +57,7 @@ public class ResourceTest {
         assertFalse(resource.isReady());
     }
 
-    @Test
-    public void isSatisfied() {
-        assertTrue(resource.isSatisfied());
-    }
-
     @After
     public void tearDown() {
     }
-}
+}*/
