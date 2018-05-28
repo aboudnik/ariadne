@@ -20,7 +20,7 @@ public class Device extends DataBlock<Hardware.Record> {
     }
 
     @Override
-    protected Hardware.Record record() {
+    public Hardware.Record record() {
         return new Hardware.Record();
     }
     

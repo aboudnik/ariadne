@@ -17,7 +17,7 @@ public class Traffic extends External<Traffic.Record> {
     }
 
     @Override
-    protected Record record() {
+    public Record record() {
         return new Record();
     }
 
