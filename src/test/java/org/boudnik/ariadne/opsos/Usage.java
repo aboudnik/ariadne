@@ -24,7 +24,7 @@ public class Usage extends DataBlock<Usage.Record> {
     }
 
     @Override
-    protected Record record() {
+    public Record record() {
         return new Record();
     }
 

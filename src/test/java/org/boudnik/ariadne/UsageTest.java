@@ -1,17 +1,10 @@
 package org.boudnik.ariadne;
 
-import org.boudnik.ariadne.DataFactory;
-import org.boudnik.ariadne.Dimension;
 import org.boudnik.ariadne.opsos.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.PrintStream;
 import java.util.HashMap;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.stream.StreamSupport;
 
 /**
  * @author Alexandre_Boudnik
@@ -78,5 +71,10 @@ public class UsageTest {
         DataFactory.LOGGER.info("device = " + factory.build(device));
         DataFactory.LOGGER.info("*");
         DataFactory.LOGGER.info("device = " + factory.build(usage));
+    }
+
+    @Test
+    public void buildAndCachePartual1() throws NoSuchMethodException {
+        System.out.println(usage.lambda().test(usage.record()));
     }
 }

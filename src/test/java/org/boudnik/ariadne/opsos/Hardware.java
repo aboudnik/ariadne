@@ -15,7 +15,7 @@ public class Hardware extends External<Hardware.Record> {
     }
 
     @Override
-    protected Record record() {
+    public Record record() {
         return new Record();
     }
 

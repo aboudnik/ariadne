@@ -18,7 +18,7 @@ public class Status extends External<Status.Record> {
     }
 
     @Override
-    protected Record record() {
+    public Record record() {
         return new Record();
     }
 
