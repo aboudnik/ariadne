@@ -56,14 +56,14 @@ public abstract class DataBlock<R> implements Resource {
         Map<String, Field> fieldMap = FieldsCache.getInstance().getFieldsMap(clazz);
         for (Map.Entry<String, ?> dimension : dimensions().entrySet()) {
 
-            System.out.println(dimension.getKey() + " " + dimension.getValue());
+            DataFactory.LOGGER.fine(dimension.getKey() + " " + dimension.getValue());
             Field field;
             if ((field = fieldMap.get(dimension.getKey())) == null) {
                 continue;
             }
             predicate = predicate.and(o -> {
                 try {
-                    System.out.println("res " + field.getDeclaringClass().getCanonicalName() + " " + field.getName() + " " + dimension.getValue() + " to check  " + o);
+                    DataFactory.LOGGER.fine("res " + field.getDeclaringClass().getCanonicalName() + " " + field.getName() + " " + dimension.getValue() + " to check  " + o);
 
                     return Objects.equals(o.getClass(), clazz) && Objects.equals(field.get(o), dimension.getValue());
                 } catch (IllegalAccessException e) {

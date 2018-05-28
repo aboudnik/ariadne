@@ -75,6 +75,6 @@ public class UsageTest {
 
     @Test
     public void buildAndCachePartual1() throws NoSuchMethodException {
-        System.out.println(usage.lambda().test(usage.record()));
+        DataFactory.LOGGER.info(String.valueOf(usage.lambda().test(usage.record())));
     }
 }
