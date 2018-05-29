@@ -87,8 +87,8 @@ public class CsvFileHandler implements Handler {
     private boolean isSatisfied(Map<String, String> csvRecordMap, Map<String, Object> dimensions) {
         for (Map.Entry<String, Object> dim : dimensions.entrySet()) {
             if (!Objects.equals(dim.getValue(), csvRecordMap.get(dim.getKey()))) {
-                DataFactory.LOGGER.fine("dim.getKey() " + dim.getKey()
-                        + " => dim.getValue() " + dim.getValue() + " vs " + csvRecordMap.get(dim.getKey()));
+                DataFactory.LOGGER.fine("failed for the KEY " + dim.getKey()
+                        + " => expected value " + dim.getValue() + " vs csv value " + csvRecordMap.get(dim.getKey()));
                 return false;
             }
         }
