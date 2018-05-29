@@ -4,12 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import static org.junit.Assert.*;
 
 /**
  * @author Alexandre_Boudnik
@@ -38,4 +35,19 @@ public class DataSourceTest {
             }
         }
     }
+
+  /*  @Test
+    public void openFileStream2() throws IOException {
+        String path = "file:///base/traffic/${state}/${month}";
+
+        path.replace("file:///base", "file:///" + Paths.get(".").toAbsolutePath().toString());
+        DataSource dataSource = new DataSource();
+
+        InputStream inputStream = dataSource.openStream();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+            for (String line; (line = reader.readLine()) != null; ) {
+                System.out.println("line = " + line);
+            }
+        }
+    }*/
 }

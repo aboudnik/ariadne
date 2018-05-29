@@ -14,6 +14,15 @@ public class Traffic extends External<Traffic.Record> {
         Date month;
         int device;
         double gigabytes;
+
+        @Override
+        public String toString() {
+            return "Record{" +
+                    "month=" + month +
+                    ", device=" + device +
+                    ", gigabytes=" + gigabytes +
+                    '}';
+        }
     }
 
     @Override

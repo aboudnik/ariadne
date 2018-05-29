@@ -1,5 +1,6 @@
 package org.boudnik.ariadne;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -91,5 +92,5 @@ public interface Resource {
 
     Map<String, Object> dimensions();
 
-    String build(DataFactory factory);
+    String build(DataFactory factory) throws IOException, IllegalAccessException;
 }

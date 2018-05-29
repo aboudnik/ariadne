@@ -12,6 +12,15 @@ public class Hardware extends External<Hardware.Record> {
         int device;
         String state;
         String city;
+
+        @Override
+        public String toString() {
+            return "Record{" +
+                    "device=" + device +
+                    ", state='" + state + '\'' +
+                    ", city='" + city + '\'' +
+                    '}';
+        }
     }
 
     @Override
