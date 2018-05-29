@@ -4,6 +4,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.boudnik.ariadne.DataBlock;
+import org.boudnik.ariadne.DataFactory;
 import org.boudnik.ariadne.DataSource;
 import org.boudnik.ariadne.FieldsCache;
 
@@ -12,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
-import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -54,10 +54,10 @@ public class CsvFileHandler implements Handler {
                     continue;
                 }
                 Object record = dataBlock.record();
-                for (Map.Entry<String, Field> name2FieldEntry : FieldsCache.getInstance().getFieldsMap(dataBlock.record().getClass()).entrySet()) {
-                    Class<?> fieldType = name2FieldEntry.getValue().getType();
-                    String fieldValue = csvRecordMap.get(name2FieldEntry.getKey());
-                    setFieldValue(record, name2FieldEntry, fieldType, fieldValue);
+                for (Map.Entry<String, Field> name2FieldEntry :
+                        FieldsCache.getInstance().getFieldsMap(dataBlock.record().getClass()).entrySet()) {
+                    setFieldValue(record, name2FieldEntry,
+                            name2FieldEntry.getValue().getType(), csvRecordMap.get(name2FieldEntry.getKey()));
                 }
                 resultCollection.add(record);
             }
@@ -65,7 +65,8 @@ public class CsvFileHandler implements Handler {
         return resultCollection;
     }
 
-    private void setFieldValue(Object record, Map.Entry<String, Field> name2FieldEntry, Class<?> fieldType, String fieldValue) throws IllegalAccessException {
+    private void setFieldValue(Object record, Map.Entry<String, Field> name2FieldEntry,
+                               Class<?> fieldType, String fieldValue) throws IllegalAccessException {
         if (fieldType.isAssignableFrom(String.class)) {
             name2FieldEntry.getValue().set(record, fieldValue);
         } else if (fieldType.isAssignableFrom(Integer.class)) {
@@ -86,7 +87,8 @@ public class CsvFileHandler implements Handler {
     private boolean isSatisfied(Map<String, String> csvRecordMap, Map<String, Object> dimensions) {
         for (Map.Entry<String, Object> dim : dimensions.entrySet()) {
             if (!Objects.equals(dim.getValue(), csvRecordMap.get(dim.getKey()))) {
-                //System.out.println("dim.getKey() " + dim.getKey() + " => dim.getValue() " + dim.getValue() + " vs " + csvRecordMap.get(dim.getKey()));
+                DataFactory.LOGGER.fine("dim.getKey() " + dim.getKey()
+                        + " => dim.getValue() " + dim.getValue() + " vs " + csvRecordMap.get(dim.getKey()));
                 return false;
             }
         }
