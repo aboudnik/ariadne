@@ -1,5 +1,6 @@
 package org.boudnik.ariadne;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Objects;
@@ -44,7 +45,7 @@ public abstract class DataBlock<R> implements Resource {
     public abstract R record();
 
     @Override
-    public String build(DataFactory factory) {
+    public String build(DataFactory factory) throws IOException, IllegalAccessException, NoSuchMethodException {
         DataFactory.LOGGER.fine((factory.get(key()) == null ? "BUILD " : "----- ") + key());
         return "file:///ephemeral/" + type();
     }

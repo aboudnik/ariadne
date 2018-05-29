@@ -4,6 +4,8 @@ import org.boudnik.ariadne.opsos.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -75,6 +77,16 @@ public class UsageTest {
 
     @Test
     public void buildAndCachePartual1() throws NoSuchMethodException {
-        DataFactory.LOGGER.info(String.valueOf(usage.lambda().test(usage.record())));
+        Collection<Usage.Record> records = new ArrayList<Usage.Record>() {{
+            add(usage.record("Leesburg", "VA", "2018-01-01"));
+            add(usage.record("Leesburg", "VA", "2018-01-01"));
+            add(usage.record("Leesburg", "VA", "2018-01-01"));
+            add(usage.record("Leesburg", "VA1", "2018-01-02"));
+            add(usage.record("Leesburg", "VA", "2018-01-01"));
+            add(usage.record("Leesbu4rg", "VA", "2018-03-01"));
+            add(usage.record("Leesburg", "VA", "2018-01-01"));
+            add(usage.record("Lee4sburg", "VA", "2018-01-01"));
+        }};
+        DataFactory.LOGGER.info(String.valueOf(records.stream().filter(usage.lambda()).count()));
     }
 }

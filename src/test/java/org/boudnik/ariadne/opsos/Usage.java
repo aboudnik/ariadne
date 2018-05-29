@@ -21,11 +21,25 @@ public class Usage extends DataBlock<Usage.Record> {
         int device;
         String month;
         double gigabytes;
+
+        public Record(String city, String state, String month) {
+            this.state = state;
+            this.city = city;
+            this.month = month;
+        }
+
+        public Record() {
+
+        }
     }
 
     @Override
     public Record record() {
         return new Record();
+    }
+
+    public Record record(String city, String state, String month) {
+        return new Record(city, state, month);
     }
 
     public Usage(Dimension... dims) {

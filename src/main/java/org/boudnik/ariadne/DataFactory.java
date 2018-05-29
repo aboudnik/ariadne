@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.*;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 /**
  * @author Alexandre_Boudnik
@@ -21,7 +22,7 @@ public class DataFactory {
     public static Logger LOGGER;
 
     static {
-        try(InputStream config = DataFactory.class.getClassLoader().getResourceAsStream("logging.properties")) {
+        try (InputStream config = DataFactory.class.getClassLoader().getResourceAsStream("logging.properties")) {
             LogManager.getLogManager().readConfiguration(config);
             LOGGER = Logger.getLogger(DataFactory.class.getName());
         } catch (IOException e) {
@@ -36,7 +37,14 @@ public class DataFactory {
 
     public <R> String build(DataBlock<R> block) {
         for (Resource resource : block.ordered()) {
-            resources.computeIfAbsent(resource.key(), k -> resource.build(this));
+            resources.computeIfAbsent(resource.key(), k -> {
+                try {
+                    return resource.build(this);
+                } catch (IOException | IllegalAccessException | NoSuchMethodException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException(e);
+                }
+            });
         }
         return get(block.key());
     }

@@ -4,12 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import static org.junit.Assert.*;
 
 /**
  * @author Alexandre_Boudnik

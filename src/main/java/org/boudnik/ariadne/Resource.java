@@ -1,9 +1,8 @@
 package org.boudnik.ariadne;
 
-import java.io.PrintStream;
+import java.io.IOException;
 import java.util.*;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -91,5 +90,5 @@ public interface Resource {
 
     Map<String, Object> dimensions();
 
-    String build(DataFactory factory);
+    String build(DataFactory factory) throws IOException, IllegalAccessException, NoSuchMethodException;
 }
