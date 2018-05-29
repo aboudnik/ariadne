@@ -45,7 +45,7 @@ public abstract class DataBlock<R> implements Resource {
     public abstract R record();
 
     @Override
-    public String build(DataFactory factory) throws IOException, IllegalAccessException {
+    public String build(DataFactory factory) throws IOException, IllegalAccessException, NoSuchMethodException {
         DataFactory.LOGGER.fine((factory.get(key()) == null ? "BUILD " : "----- ") + key());
         return "file:///ephemeral/" + type();
     }

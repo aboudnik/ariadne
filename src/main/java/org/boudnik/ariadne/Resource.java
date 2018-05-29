@@ -92,5 +92,5 @@ public interface Resource {
 
     Map<String, Object> dimensions();
 
-    String build(DataFactory factory) throws IOException, IllegalAccessException;
+    String build(DataFactory factory) throws IOException, IllegalAccessException, NoSuchMethodException;
 }

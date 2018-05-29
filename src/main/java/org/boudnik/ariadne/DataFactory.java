@@ -39,7 +39,7 @@ public class DataFactory {
             resources.computeIfAbsent(resource.key(), k -> {
                 try {
                     return resource.build(this);
-                } catch (IOException | IllegalAccessException e) {
+                } catch (IOException | IllegalAccessException | NoSuchMethodException e) {
                     e.printStackTrace();
                     throw new RuntimeException(e);
                 }

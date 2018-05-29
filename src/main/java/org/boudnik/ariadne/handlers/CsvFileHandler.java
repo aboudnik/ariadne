@@ -50,9 +50,9 @@ public class CsvFileHandler implements Handler {
 
             for (CSVRecord csvRecord : csvParser) {
                 Map<String, String> csvRecordMap = csvRecord.toMap();
-                if (!isSatisfied(csvRecordMap, dimensions)) {
+             /*   if (!isSatisfied(csvRecordMap, dimensions)) {
                     continue;
-                }
+                }*/
                 Object record = dataBlock.record();
                 for (Map.Entry<String, Field> name2FieldEntry :
                         FieldsCache.getInstance().getFieldsMap(dataBlock.record().getClass()).entrySet()) {
