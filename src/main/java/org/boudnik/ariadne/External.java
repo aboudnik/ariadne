@@ -4,6 +4,7 @@ import org.boudnik.ariadne.handlers.HandlerFactory;
 import org.mvel2.templates.TemplateRuntime;
 
 import java.io.IOException;
+import java.util.Collection;
 
 /**
  * @author Alexandre_Boudnik
@@ -20,8 +21,9 @@ public abstract class External<R> extends DataBlock<R> {
         DataSource dataSource = factory.getDataSource(type());
         assert dataSource != null;
         String url = (String) TemplateRuntime.eval(dataSource.getTemplate(), dimensions());
-        HandlerFactory.getInstance().getHandler(url).handle(this);
+        Collection collection = HandlerFactory.getInstance().getHandler(url).handle(this);
         DataFactory.LOGGER.fine("loaded from "+ url);
+        DataFactory.LOGGER.fine("loaded data "+ collection);
         return url;
     }
 }
