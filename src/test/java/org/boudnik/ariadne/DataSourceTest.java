@@ -35,19 +35,4 @@ public class DataSourceTest {
             }
         }
     }
-
-  /*  @Test
-    public void openFileStream2() throws IOException {
-        String path = "file:///base/traffic/${state}/${month}";
-
-        path.replace("file:///base", "file:///" + Paths.get(".").toAbsolutePath().toString());
-        DataSource dataSource = new DataSource();
-
-        InputStream inputStream = dataSource.openStream();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-            for (String line; (line = reader.readLine()) != null; ) {
-                System.out.println("line = " + line);
-            }
-        }
-    }*/
 }

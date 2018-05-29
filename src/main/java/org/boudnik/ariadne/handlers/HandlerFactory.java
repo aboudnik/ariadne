@@ -19,14 +19,14 @@ public class HandlerFactory {
         private static HandlerFactory INSTANCE = new HandlerFactory();
     }
 
-    public static HandlerFactory getInstance(){
+    public static HandlerFactory getInstance() {
         return HandlerFactoryHolder.INSTANCE;
     }
 
     public Handler getHandler(String url) {
-        if(url.startsWith(FILE_PREFIX)) {
-            return new CsvFileHandler(new DataSource(FILE_PREFIX +Paths.get(".", url.substring(FILE_PREFIX.length())).toAbsolutePath().toString()));
-        } else if(url.startsWith(JDBC_PREFIX)) {
+        if (url.startsWith(FILE_PREFIX)) {
+            return new CsvFileHandler(new DataSource(FILE_PREFIX + Paths.get(".", url.substring(FILE_PREFIX.length())).toAbsolutePath().toString()));
+        } else if (url.startsWith(JDBC_PREFIX)) {
             return new JdbcHandler();
         }
         throw new UnsupportedOperationException("Not expected token " + url);

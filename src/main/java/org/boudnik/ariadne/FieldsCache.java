@@ -21,7 +21,7 @@ public class FieldsCache {
         private static FieldsCache INSTANCE = new FieldsCache();
     }
 
-    public static FieldsCache getInstance(){
+    public static FieldsCache getInstance() {
         return FieldsCacheHolder.INSTANCE;
     }
 
@@ -30,8 +30,8 @@ public class FieldsCache {
         cache.get(field.getDeclaringClass().getCanonicalName()).putIfAbsent(field.getName(), field);
     }
 
-    public void put(Class clazz, Field ... fields) {
-        for(Field field: fields) {
+    public void put(Class clazz, Field... fields) {
+        for (Field field : fields) {
             cache.putIfAbsent(clazz.getCanonicalName(), new HashMap<>());
             cache.get(clazz.getCanonicalName()).putIfAbsent(field.getName(), field);
         }
@@ -39,17 +39,16 @@ public class FieldsCache {
 
     public Field getField(String canonicalClassName, String fieldName) {
         Map<String, Field> fieldsMap;
-        if((fieldsMap = cache.get(canonicalClassName)) == null) return null;
+        if ((fieldsMap = cache.get(canonicalClassName)) == null) return null;
         return fieldsMap.get(fieldName);
     }
 
 
     public Map<String, Field> getFieldsMap(Class clazz) {
         String canonicalClassName = clazz.getCanonicalName();
-        if(cache.get(canonicalClassName) != null){
+        if (cache.get(canonicalClassName) != null) {
             return cache.get(canonicalClassName);
-        } else
-        {
+        } else {
             Map<String, Field> fieldMap =
                     Stream.of(clazz.getDeclaredFields()).collect(Collectors.toMap(Field::getName, Function.identity()));
             fieldMap.values().forEach(t -> t.setAccessible(true));

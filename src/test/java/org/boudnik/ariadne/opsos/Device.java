@@ -23,7 +23,7 @@ public class Device extends DataBlock<Hardware.Record> {
     public Hardware.Record record() {
         return new Hardware.Record();
     }
-    
+
     @Override
     public Set<? extends Resource> prerequisites() {
         Map<String, ?> dimensions = dimensions();

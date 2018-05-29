@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.*;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 /**
  * @author Alexandre_Boudnik
