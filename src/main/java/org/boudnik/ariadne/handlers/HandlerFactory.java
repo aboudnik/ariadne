@@ -2,17 +2,15 @@ package org.boudnik.ariadne.handlers;
 
 import org.boudnik.ariadne.DataSource;
 
-import java.lang.reflect.Field;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Sergey Nuyanzin
  * @since 5/28/2018
  */
 public class HandlerFactory {
-    private final Map<String, Map<String, Field>> cache = new HashMap<>();
+    public static final String FILE_PREFIX = "file:///";
+    public static final String JDBC_PREFIX = "jdbc:";
 
     private HandlerFactory() {
     }
@@ -26,9 +24,9 @@ public class HandlerFactory {
     }
 
     public Handler getHandler(String url) {
-        if(url.startsWith("file:///base")) {
-            return new CsvFileHandler(new DataSource("file:///" +Paths.get(".", url.substring(7)).toAbsolutePath().toString()));
-        } else if(url.startsWith("jdbc:")) {
+        if(url.startsWith(FILE_PREFIX)) {
+            return new CsvFileHandler(new DataSource(FILE_PREFIX +Paths.get(".", url.substring(FILE_PREFIX.length())).toAbsolutePath().toString()));
+        } else if(url.startsWith(JDBC_PREFIX)) {
             return new JdbcHandler();
         }
         throw new UnsupportedOperationException("Not expected token " + url);

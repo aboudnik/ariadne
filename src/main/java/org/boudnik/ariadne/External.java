@@ -25,7 +25,7 @@ public abstract class External<R> extends DataBlock<R> {
         Collection collection = HandlerFactory.getInstance().getHandler(url).handle(this);
         DataFactory.LOGGER.fine("loaded from "+ url);
         DataFactory.LOGGER.fine("loaded data "+ collection);
-        DataFactory.LOGGER.fine("loaded data "+ collection.stream().filter(lambda()).collect(Collectors.toList()));
+        DataFactory.LOGGER.fine("loaded data after lambda "+ collection.stream().filter(lambda()).collect(Collectors.toList()));
         return url;
     }
 }
