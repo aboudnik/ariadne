@@ -8,6 +8,11 @@ import org.boudnik.ariadne.External;
  * @since 05/18/2018
  */
 public class Hardware extends External<Hardware.Record> {
+    @Override
+    public Record valueOf(String s) {
+        return null;
+    }
+
     public static class Record {
         int device;
         String state;

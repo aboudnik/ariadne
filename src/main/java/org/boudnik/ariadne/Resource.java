@@ -1,6 +1,7 @@
 package org.boudnik.ariadne;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -9,7 +10,7 @@ import java.util.function.Function;
  * @author Alexandre_Boudnik
  * @since 05/04/2018
  */
-public interface Resource {
+public interface Resource extends Serializable {
 
     class Key {
         String type;

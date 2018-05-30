@@ -2,6 +2,11 @@ package org.boudnik.ariadne.handlers;
 
 import org.boudnik.ariadne.DataSource;
 
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
+import java.net.URLStreamHandlerFactory;
 import java.nio.file.Paths;
 
 /**
@@ -24,11 +29,11 @@ public class HandlerFactory {
     }
 
     public Handler getHandler(String url) {
-        if (url.startsWith(FILE_PREFIX)) {
-            return new CsvFileHandler(new DataSource(FILE_PREFIX + Paths.get(".", url.substring(FILE_PREFIX.length())).toAbsolutePath().toString()));
-        } else if (url.startsWith(JDBC_PREFIX)) {
-            return new JdbcHandler();
-        }
+//        if (url.startsWith(FILE_PREFIX)) {
+//            return new CsvFileHandler(new DataSource(FILE_PREFIX + Paths.get(".", url.substring(FILE_PREFIX.length())).toAbsolutePath().toString()));
+//        } else if (url.startsWith(JDBC_PREFIX)) {
+//            return new JdbcHandler();
+//        }
         throw new UnsupportedOperationException("Not expected token " + url);
     }
 }

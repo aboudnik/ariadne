@@ -8,6 +8,11 @@ import org.boudnik.ariadne.External;
  * @since 05/23/2018
  */
 public class Status extends External<Status.Record> {
+    @Override
+    public Record valueOf(String s) {
+        return null;
+    }
+
     public static class Record {
         int device;
         boolean operational;
