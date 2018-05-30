@@ -42,7 +42,6 @@ public abstract class External<R> extends DataBlock<R> {
     private Predicate<R> getFilter() {
         Predicate<R> p = getTrueFilter();
         Class clazz = record().getClass();
-        System.out.println("clazz " + clazz);
 
         for (Map.Entry<String, Field> mapEntryField : FieldsCache.getInstance().getFieldsMap(clazz).entrySet()) {
             Object dimValue;

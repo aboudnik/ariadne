@@ -6,6 +6,7 @@ import org.apache.spark.sql.*;
 import org.boudnik.ariadne.opsos.Traffic;
 import org.junit.Test;
 
+import java.io.File;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.sql.Date;
@@ -26,7 +27,7 @@ public class SparkTest {
             .getOrCreate();
 
 
-    @Test
+    //@Test
     public <R> void first() {
         Date month = Date.valueOf("2018-02-01");
 //        Dataset<Row> csv = spark.read().csv("C:/Projects/ariadne/src/test/data/opsos/traffic/*");
@@ -40,7 +41,7 @@ public class SparkTest {
             return traffic;
         };
         JavaRDD<Traffic.Record> trafficRDD = spark.read()
-                .textFile(Paths.get("src", "test", "data", "opsos", "traffic").toAbsolutePath().toString() + "/*")
+                .textFile(Paths.get("base", "external", "opsos", "traffic").toAbsolutePath().toString() + File.separator + "*")
                 .javaRDD()
                 .map(fromString)
                 .filter((Function<Traffic.Record, Boolean>) record -> record.getDevice() == 101);
