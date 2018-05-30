@@ -7,6 +7,7 @@ import org.boudnik.ariadne.opsos.Traffic;
 import org.junit.Test;
 
 import java.net.URL;
+import java.nio.file.Paths;
 import java.sql.Date;
 import java.util.Properties;
 import java.util.function.BiConsumer;
@@ -39,7 +40,7 @@ public class SparkTest {
             return traffic;
         };
         JavaRDD<Traffic.Record> trafficRDD = spark.read()
-                .textFile("C:/Projects/ariadne/src/test/data/opsos/traffic/*")
+                .textFile(Paths.get("src", "test", "data", "opsos", "traffic").toAbsolutePath().toString() + "/*")
                 .javaRDD()
                 .map(fromString)
                 .filter((Function<Traffic.Record, Boolean>) record -> record.getDevice() == 101);

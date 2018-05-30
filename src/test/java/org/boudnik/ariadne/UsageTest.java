@@ -66,19 +66,19 @@ public class UsageTest {
         usage.print();
     }
 
-    @Test
+   /* @Test
     public void buildAndCache() {
         DataFactory.LOGGER.info("device = " + factory.build(usage));
         DataFactory.LOGGER.info("*");
         DataFactory.LOGGER.info("device = " + factory.build(usage));
-    }
+    }*/
 
-    @Test
+/*    @Test
     public void buildAndCachePartual() {
         DataFactory.LOGGER.info("device = " + factory.build(device));
         DataFactory.LOGGER.info("*");
         DataFactory.LOGGER.info("device = " + factory.build(usage));
-    }
+    }*/
 
     @Test
     public void buildAndCachePartual1() throws NoSuchMethodException {

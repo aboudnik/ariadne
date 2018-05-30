@@ -10,6 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.sql.*;
 
 import static junit.framework.TestCase.assertEquals;
@@ -23,7 +24,9 @@ public class GrandTest {
     private static Server server;
     Traffic traffic = new Traffic(
             new Dimension("month", Date.valueOf("2018-01-01")),
-            new Dimension("state", "VA")
+            new Dimension("state", "VA"),
+            new Dimension("gigabytes", 11.2),
+            new Dimension("port", 80)
     );
     private DataFactory factory;
     private static String EXTERNAL;
@@ -33,9 +36,9 @@ public class GrandTest {
     public static void start() {
         try {
             server = Server.createTcpServer().start();
-            File root = new File(System.getProperty("user.dir"), "base");
-            EXTERNAL = new File(root, "external").toURI().getPath();
-            CACHE = new File(root, "cache").toURI().getPath();
+            String userDirProperty = System.getProperty("user.dir");
+            EXTERNAL = Paths.get(userDirProperty, "base", "external").toAbsolutePath().toString();
+            CACHE = Paths.get(userDirProperty, "base", "cache").toAbsolutePath().toString();
             rmRF(new File(CACHE));
         } catch (SQLException e) {
             e.printStackTrace();
@@ -56,8 +59,8 @@ public class GrandTest {
                 new DataSource<>(
                         Traffic.class,
                         Traffic.Record.class,
-                        EXTERNAL + "opsos/traffic/${month}.${state}.csv",
-                        CACHE + "traffic/${month}/${state}",
+                        Paths.get(EXTERNAL, "opsos", "traffic", "${month}.${state}.csv").toAbsolutePath().toString(),
+                        Paths.get(CACHE, "traffic", "${month}", "${state}").toAbsolutePath().toString(),
                         DataFrameReader::textFile,
                         DataFrameWriter::json
                 ));
