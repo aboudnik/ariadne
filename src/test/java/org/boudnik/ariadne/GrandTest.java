@@ -10,7 +10,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
-import java.nio.file.Paths;
+import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.*;
 
 import static junit.framework.TestCase.assertEquals;
@@ -39,18 +41,27 @@ public class GrandTest {
             String userDirProperty = System.getProperty("user.dir");
             EXTERNAL = Paths.get(userDirProperty, "base", "external").toAbsolutePath().toString();
             CACHE = Paths.get(userDirProperty, "base", "cache").toAbsolutePath().toString();
-            rmRF(new File(CACHE));
-        } catch (SQLException e) {
+            rmRF(Paths.get(CACHE));
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
     }
 
     @SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
-    private static void rmRF(File root) {
-        if (root.isDirectory())
-            for (File file : root.listFiles())
-                rmRF(file);
-        root.delete();
+    private static void rmRF(Path directory) throws IOException {
+        Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                Files.delete(dir);
+                return FileVisitResult.CONTINUE;
+            }
+        });
     }
 
     @Before
