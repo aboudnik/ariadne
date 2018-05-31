@@ -7,19 +7,21 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
+import org.boudnik.ariadne.handlers.SerializablePredicate;
 import org.mvel2.templates.TemplateRuntime;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.Map;
+import java.util.Objects;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * @author Alexandre_Boudnik
  * @since 05/23/2018
  */
 public abstract class DataBlock<R extends Serializable> implements Resource {
-    private static final Predicate PREDICATE = t -> true;
     private final SortedMap<String, Object> dimensions = new TreeMap<>();
     private String alias;
 
@@ -49,6 +51,7 @@ public abstract class DataBlock<R extends Serializable> implements Resource {
     }
 
     public abstract R record();
+
     public abstract String sql();
 
     public abstract R valueOf(Row row);
@@ -69,10 +72,8 @@ public abstract class DataBlock<R extends Serializable> implements Resource {
         return dataset;
     }
 
-    //todo: Predicate doesn't implement Serializable
-    public Predicate<R> lambda() throws NoSuchMethodException {
-
-        @SuppressWarnings("unchecked") Predicate<R> predicate = PREDICATE;
+    public SerializablePredicate<R> lambda() throws NoSuchMethodException {
+        @SuppressWarnings("unchecked") SerializablePredicate<R> predicate = SerializablePredicate.TRUE_PREDICATE;
         Class clazz = getClass().getDeclaredMethod("record").getReturnType();
         Map<String, Field> fieldMap = FieldsCache.getInstance().getFieldsMap(clazz);
         for (Map.Entry<String, ?> dimension : dimensions().entrySet()) {
@@ -84,7 +85,8 @@ public abstract class DataBlock<R extends Serializable> implements Resource {
             }
             predicate = predicate.and(o -> {
                 try {
-                    DataFactory.LOGGER.fine("res " + field.getDeclaringClass().getCanonicalName() + " " + field.getName() + " " + dimension.getValue() + " to check  " + o);
+                    DataFactory.LOGGER.fine("res " + field.getDeclaringClass().getCanonicalName()
+                            + " " + field.getName() + " " + dimension.getValue() + " to check  " + o);
 
                     return Objects.equals(o.getClass(), clazz) && Objects.equals(field.get(o), dimension.getValue());
                 } catch (IllegalAccessException e) {

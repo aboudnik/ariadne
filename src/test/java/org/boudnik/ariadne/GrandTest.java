@@ -70,24 +70,24 @@ public class GrandTest {
                 new DataSource<>(
                         Traffic.class,
                         Traffic.Record.class,
-                        Paths.get(EXTERNAL, "opsos", "traffic", "${month}.${state}.csv").toAbsolutePath().toString(),
-                        Paths.get(CACHE, "traffic", "${month}", "${state}").toAbsolutePath().toString(),
+                        Paths.get(EXTERNAL, "opsos", "traffic", "${month}.${state}.csv"),
+                        Paths.get(CACHE, "traffic", "${month}", "${state}"),
                         DataFrameReader::csv,
                         DataFrameWriter::csv
                 ),
                 new DataSource<>(
                         Hardware.class,
                         Hardware.Record.class,
-                        Paths.get(EXTERNAL, "opsos", "devices.csv").toAbsolutePath().toString(),
-                        Paths.get(CACHE, "devices", "${state}").toAbsolutePath().toString(),
+                        Paths.get(EXTERNAL, "opsos", "devices.csv"),
+                        Paths.get(CACHE, "devices", "${state}"),
                         DataFrameReader::csv,
                         DataFrameWriter::json
                 ),
                 new DataSource<>(
                         Total.class,
                         Total.Record.class,
-                        Paths.get(CACHE, "total", "${month}").toAbsolutePath().toString(),
-                        Paths.get(CACHE, "total", "${month}").toAbsolutePath().toString(),
+                        Paths.get(CACHE, "total", "${month}"),
+                        Paths.get(CACHE, "total", "${month}"),
                         DataFrameReader::csv,
                         DataFrameWriter::csv
                 )

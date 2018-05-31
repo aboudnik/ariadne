@@ -5,6 +5,7 @@ import org.apache.spark.sql.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
@@ -20,11 +21,11 @@ public class DataSource<R> {
     final BiFunction<DataFrameReader, String, Dataset<Row>> open;
     final BiConsumer<DataFrameWriter<R>, String> save;
 
-    public DataSource(Class<?> clazz, Class<R> record, String src, String dst, BiFunction<DataFrameReader, String, Dataset<Row>> open, final BiConsumer<DataFrameWriter<R>, String> save) {
+    public DataSource(Class<?> clazz, Class<R> record, Path src, Path dst, BiFunction<DataFrameReader, String, Dataset<Row>> open, final BiConsumer<DataFrameWriter<R>, String> save) {
         this.clazz = clazz;
         this.record = record;
-        this.src = src;
-        this.dst = dst;
+        this.src = src.toAbsolutePath().toString();
+        this.dst = dst.toAbsolutePath().toString();
         this.save = save;
         this.open = open;
     }
