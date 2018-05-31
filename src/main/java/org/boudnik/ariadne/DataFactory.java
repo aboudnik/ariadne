@@ -1,13 +1,10 @@
 package org.boudnik.ariadne;
 
+import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.SparkSession;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLStreamHandler;
-import java.net.URLStreamHandlerFactory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.LogManager;
@@ -19,14 +16,14 @@ import java.util.logging.Logger;
  */
 public class DataFactory {
     private final Map<String, DataSource> dataSources = new HashMap<>();
-    private final Map<Resource.Key, String> resources = new HashMap<>();
+    private final Map<Resource.Key, Dataset> resources = new HashMap<>();
     private SparkSession spark = SparkSession
             .builder()
             .appName("Java Spark SQL basic example")
             .master("local[*]")
             .getOrCreate();
 
-    public DataFactory(DataSource... dataSources) {
+    DataFactory(DataSource... dataSources) {
         for (DataSource dataSource : dataSources) {
             this.dataSources.put(dataSource.clazz.getName(), dataSource);
         }
@@ -44,30 +41,22 @@ public class DataFactory {
         }
     }
 
-    public <R> DataSource<R> getDataSource(String name) {
+    <R> DataSource<R> getDataSource(String name) {
         //noinspection unchecked
         return dataSources.get(name);
     }
 
-    public <R> String build(DataBlock<R> block) {
-        for (Resource resource : block.ordered()) {
-            resources.computeIfAbsent(resource.key(), k -> {
-                try {
-                    return resource.build(this);
-                } catch (IOException | IllegalAccessException | NoSuchMethodException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                }
-            });
+    <R> Dataset<R> build(Resource block) {
+        Resource.Key key = block.key();
+        Dataset dataset = resources.get(key);
+        if(dataset==null) {
+            resources.put(key, dataset = block.build(this));
         }
-        return get(block.key());
+        //noinspection unchecked
+        return dataset;
     }
 
-    public String get(Resource.Key key) {
-        return resources.get(key);
-    }
-
-    public SparkSession getSession() {
+    SparkSession getSession() {
         return spark;
     }
 }

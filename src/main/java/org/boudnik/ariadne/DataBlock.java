@@ -1,18 +1,24 @@
 package org.boudnik.ariadne;
 
-import java.io.IOException;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.Function;
+import org.apache.spark.rdd.RDD;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Encoders;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
+import org.mvel2.templates.TemplateRuntime;
+
+import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.Map;
-import java.util.Objects;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
  * @author Alexandre_Boudnik
  * @since 05/23/2018
  */
-public abstract class DataBlock<R> implements Resource {
+public abstract class DataBlock<R extends Serializable> implements Resource {
     private static final Predicate PREDICATE = t -> true;
     private final SortedMap<String, Object> dimensions = new TreeMap<>();
     private String alias;
@@ -43,16 +49,30 @@ public abstract class DataBlock<R> implements Resource {
     }
 
     public abstract R record();
+    public abstract String sql();
+
+    public abstract R valueOf(Row row);
 
     @Override
-    public String build(DataFactory factory) throws IOException, IllegalAccessException, NoSuchMethodException {
-        DataFactory.LOGGER.fine((factory.get(key()) == null ? "BUILD " : "----- ") + key());
-        return "file:///ephemeral/" + type();
+    public Dataset<R> build(DataFactory factory) {
+//        DataFactory.LOGGER.fine((factory.get(key()) == null ? "BUILD " : "----- ") + key());
+        for (Resource resource : prerequisites()) {
+            Dataset<R> built = factory.build(resource);
+            String table = resource.type().replace(".", "_");
+            built.createOrReplaceTempView(table);
+        }
+        Dataset<Row> sql = factory.getSession().sql(sql());
+        JavaRDD<R> map = sql.javaRDD().map(this::valueOf);
+        DataSource<R> dataSource = factory.getDataSource(type());
+        Dataset<R> dataset = factory.getSession().createDataset(map.rdd(), Encoders.bean(dataSource.record));
+        save(dataSource, dataset);
+        return dataset;
     }
 
+    //todo: Predicate doesn't implement Serializable
     public Predicate<R> lambda() throws NoSuchMethodException {
 
-        Predicate<R> predicate = PREDICATE;
+        @SuppressWarnings("unchecked") Predicate<R> predicate = PREDICATE;
         Class clazz = getClass().getDeclaredMethod("record").getReturnType();
         Map<String, Field> fieldMap = FieldsCache.getInstance().getFieldsMap(clazz);
         for (Map.Entry<String, ?> dimension : dimensions().entrySet()) {
@@ -75,4 +95,35 @@ public abstract class DataBlock<R> implements Resource {
         }
         return predicate;
     }
+
+    private String eval(String template) {
+        return (String) TemplateRuntime.eval(template, dimensions());
+    }
+
+    private Function<R, Boolean> getFilter() {
+        Function<R, Boolean> p = t -> true;
+        Class clazz = record().getClass();
+        for (Map.Entry<String, Field> entry : FieldsCache.getInstance().getFieldsMap(clazz).entrySet()) {
+            Object expected = dimensions().get(entry.getKey());
+            if (expected != null) {
+                String name = entry.getValue().getName();
+                Function<R, Boolean> finalP = p;
+                p = t -> finalP.call(t) && Objects.equals(expected, clazz.getField(name).get(t));
+            }
+        }
+        return p;
+    }
+
+    Dataset<R> save(DataSource<R> dataSource, Dataset<R> dataset) {
+        String dst = eval(dataSource.dst);
+        dataSource.save.accept(dataset.write(), dst);
+        return dataset;
+    }
+
+    Dataset<R> load(DataSource<R> dataSource, SparkSession session) {
+        Dataset<Row> input = dataSource.open.apply(session.read(), eval(dataSource.src));
+        RDD<R> rdd = input.javaRDD().map(this::valueOf).filter(getFilter()).rdd();
+        return session.createDataset(rdd, Encoders.bean(dataSource.record));
+    }
+
 }

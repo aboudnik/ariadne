@@ -1,5 +1,6 @@
 package org.boudnik.ariadne.opsos;
 
+import org.apache.spark.sql.Row;
 import org.boudnik.ariadne.DataBlock;
 import org.boudnik.ariadne.Dimension;
 import org.boudnik.ariadne.Resource;
@@ -25,9 +26,19 @@ public class Device extends DataBlock<Hardware.Record> {
     }
 
     @Override
-    public Set<? extends Resource> prerequisites() {
+    public Hardware.Record valueOf(Row row) {
+        return null;
+    }
+
+    @Override
+    public String sql() {
+        return null;
+    }
+
+    @Override
+    public Set<Resource> prerequisites() {
         Map<String, ?> dimensions = dimensions();
-        return new HashSet<>(Arrays.asList(
+        return new HashSet<Resource>(Arrays.asList(
                 new Status(
                         new Dimension("month", dimensions.get("month")),
                         new Dimension("state", dimensions.get("state")),

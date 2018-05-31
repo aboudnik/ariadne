@@ -1,8 +1,6 @@
 package org.boudnik.ariadne;
 
-import org.apache.spark.sql.DataFrameReader;
-import org.apache.spark.sql.DataFrameWriter;
-import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,10 +17,10 @@ public class DataSource<R> {
     final Class<R> record;
     final String src;
     final String dst;
-    final BiFunction<DataFrameReader, String, Dataset<String>> open;
+    final BiFunction<DataFrameReader, String, Dataset<Row>> open;
     final BiConsumer<DataFrameWriter<R>, String> save;
 
-    public DataSource(Class<?> clazz, Class<R> record, String src, String dst, BiFunction<DataFrameReader, String, Dataset<String>> open, final BiConsumer<DataFrameWriter<R>, String> save) {
+    public DataSource(Class<?> clazz, Class<R> record, String src, String dst, BiFunction<DataFrameReader, String, Dataset<Row>> open, final BiConsumer<DataFrameWriter<R>, String> save) {
         this.clazz = clazz;
         this.record = record;
         this.src = src;

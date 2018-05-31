@@ -1,7 +1,10 @@
 package org.boudnik.ariadne.opsos;
 
+import org.apache.spark.sql.Row;
 import org.boudnik.ariadne.Dimension;
 import org.boudnik.ariadne.External;
+
+import java.io.Serializable;
 
 /**
  * @author Alexandre_Boudnik
@@ -9,14 +12,42 @@ import org.boudnik.ariadne.External;
  */
 public class Hardware extends External<Hardware.Record> {
     @Override
-    public Record valueOf(String s) {
-        return null;
+    public Record valueOf(Row row) {
+        Record hardware = new Record();
+        hardware.setDevice(Integer.valueOf(row.getString(0)));
+        hardware.setState(row.getString(1));
+        hardware.setCity(row.getString(2));
+        return hardware;
     }
 
-    public static class Record {
-        int device;
-        String state;
-        String city;
+    public static class Record implements Serializable {
+        public int device;
+        public String state;
+        public String city;
+
+        public int getDevice() {
+            return device;
+        }
+
+        public void setDevice(int device) {
+            this.device = device;
+        }
+
+        public String getState() {
+            return state;
+        }
+
+        public void setState(String state) {
+            this.state = state;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public void setCity(String city) {
+            this.city = city;
+        }
 
         @Override
         public String toString() {

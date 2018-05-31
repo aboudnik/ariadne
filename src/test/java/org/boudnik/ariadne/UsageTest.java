@@ -2,12 +2,10 @@ package org.boudnik.ariadne;
 
 import org.boudnik.ariadne.opsos.*;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 
 /**
  * @author Alexandre_Boudnik
@@ -18,6 +16,14 @@ public class UsageTest {
     private Usage usage;
     private Device device;
     private DataFactory factory;
+
+    private static Usage.Record record(String city, String state, String month) {
+        Usage.Record record = new Usage.Record();
+        record.setCity(city);
+        record.setState(state);
+        record.setMonth(month);
+        return record;
+    }
 
     @Before
     public void setUp() {
@@ -83,14 +89,14 @@ public class UsageTest {
     @Test
     public void buildAndCachePartual1() throws NoSuchMethodException {
         Collection<Usage.Record> records = new ArrayList<Usage.Record>() {{
-            add(usage.record("Leesburg", "VA", "2018-01-01"));
-            add(usage.record("Leesburg", "VA", "2018-01-01"));
-            add(usage.record("Leesburg", "VA", "2018-01-01"));
-            add(usage.record("Leesburg", "VA1", "2018-01-02"));
-            add(usage.record("Leesburg", "VA", "2018-01-01"));
-            add(usage.record("Leesbu4rg", "VA", "2018-03-01"));
-            add(usage.record("Leesburg", "VA", "2018-01-01"));
-            add(usage.record("Lee4sburg", "VA", "2018-01-01"));
+            add(record("Leesburg", "VA", "2018-01-01"));
+            add(record("Leesburg", "VA", "2018-01-01"));
+            add(record("Leesburg", "VA", "2018-01-01"));
+            add(record("Leesburg", "VA1", "2018-01-02"));
+            add(record("Leesburg", "VA", "2018-01-01"));
+            add(record("Leesbu4rg", "VA", "2018-03-01"));
+            add(record("Leesburg", "VA", "2018-01-01"));
+            add(record("Lee4sburg", "VA", "2018-01-01"));
         }};
         DataFactory.LOGGER.info(String.valueOf(records.stream().filter(usage.lambda()).count()));
     }

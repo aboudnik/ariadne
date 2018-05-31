@@ -1,6 +1,7 @@
 package org.boudnik.ariadne;
 
-import java.io.IOException;
+import org.apache.spark.sql.Dataset;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -61,7 +62,7 @@ public interface Resource extends Serializable {
                 indent -> indent - 1);
     }
 
-    default Set<? extends Resource> prerequisites() {
+    default Set<Resource> prerequisites() {
         return Collections.emptySet();
     }
 
@@ -91,5 +92,5 @@ public interface Resource extends Serializable {
 
     Map<String, Object> dimensions();
 
-    String build(DataFactory factory) throws IOException, IllegalAccessException, NoSuchMethodException;
+    Dataset<?> build(DataFactory factory);
 }
