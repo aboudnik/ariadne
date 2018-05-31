@@ -52,6 +52,10 @@ public interface Resource extends Serializable {
         return getClass().getTypeName();
     }
 
+    default String table() {
+        return type().replace(".", "_");
+    }
+
     default void print() {
         walk(0,
                 indent -> indent + 1,

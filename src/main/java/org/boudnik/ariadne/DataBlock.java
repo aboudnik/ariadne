@@ -31,8 +31,8 @@ public abstract class DataBlock<R extends Serializable> implements Resource {
         return this;
     }
 
-    public String type() {
-        return alias == null ? Resource.super.type() : alias;
+    public String table() {
+        return alias == null ? Resource.super.table() : alias;
     }
 
     public DataBlock(Dimension... dimensions) {
@@ -59,11 +59,9 @@ public abstract class DataBlock<R extends Serializable> implements Resource {
 
     @Override
     public Dataset<R> build(DataFactory factory) {
-//        DataFactory.LOGGER.fine((factory.get(key()) == null ? "BUILD " : "----- ") + key());
         for (Resource resource : prerequisites()) {
             Dataset<R> built = factory.build(resource);
-            String table = resource.type().replace(".", "_");
-            built.createOrReplaceTempView(table);
+            built.createOrReplaceTempView(resource.table());
         }
         Dataset<Row> sql = factory.getSession().sql(sql());
         JavaRDD<R> map = sql.javaRDD().map(this::valueOf);
