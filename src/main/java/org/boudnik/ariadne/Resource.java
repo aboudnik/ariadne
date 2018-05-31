@@ -9,15 +9,16 @@ import java.util.function.Function;
 
 /**
  * @author Alexandre_Boudnik
+ * @author Sergey Nuyanzin
  * @since 05/04/2018
  */
 public interface Resource extends Serializable {
 
     class Key {
-        String type;
-        Map<String, Object> dimensions;
 
-        Key(String type, Map<String, Object> dimensions) {
+        String type;
+        Map<String, ?> dimensions;
+        Key(String type, Map<String, ?> dimensions) {
             this.type = type;
             this.dimensions = dimensions;
         }
@@ -41,14 +42,18 @@ public interface Resource extends Serializable {
         public String toString() {
             return type + dimensions;
         }
-    }
 
+    }
     default Key key() {
         return new Key(type(), dimensions());
     }
 
     default String type() {
         return getClass().getTypeName();
+    }
+
+    default String table() {
+        return type().replace(".", "_");
     }
 
     default void print() {
@@ -90,7 +95,12 @@ public interface Resource extends Serializable {
         return leave.apply(sink);
     }
 
-    Map<String, Object> dimensions();
+    Map<String, ?> dimensions();
+
+    default Set<Resource> dimensions(Resource... dimensions) {
+        return new HashSet<>(Arrays.asList(dimensions));
+    }
+
 
     Dataset<?> build(DataFactory factory);
 }

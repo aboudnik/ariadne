@@ -17,11 +17,12 @@ public class Traffic extends External<Traffic.Record> {
         super(dims);
     }
 
+    @SuppressWarnings({"unused", "WeakerAccess"})
     public static class Record implements Serializable {
-        public Date month;
-        public Integer device;
-        public Integer port;
-        public Double gigabytes;
+        private Date month;
+        private Integer device;
+        private Integer port;
+        private Double gigabytes;
 
         @Override
         public String toString() {

@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 
 /**
  * @author Alexandre_Boudnik
+ * @author Sergey Nuyanzin
  * @since 05/23/2018
  */
 public abstract class DataBlock<R extends Serializable> implements Resource {
@@ -30,18 +31,18 @@ public abstract class DataBlock<R extends Serializable> implements Resource {
         return this;
     }
 
-    public String type() {
-        return alias == null ? Resource.super.type() : alias;
+    public String table() {
+        return alias == null ? Resource.super.table() : alias;
     }
 
     public DataBlock(Dimension... dimensions) {
         for (Dimension dimension : dimensions) {
-            this.dimensions().put(dimension.name, dimension.limit);
+            this.dimensions.put(dimension.name, dimension.limit);
         }
     }
 
     @Override
-    public final Map<String, Object> dimensions() {
+    public final Map<String, ?> dimensions() {
         return dimensions;
     }
 
@@ -58,11 +59,9 @@ public abstract class DataBlock<R extends Serializable> implements Resource {
 
     @Override
     public Dataset<R> build(DataFactory factory) {
-//        DataFactory.LOGGER.fine((factory.get(key()) == null ? "BUILD " : "----- ") + key());
         for (Resource resource : prerequisites()) {
             Dataset<R> built = factory.build(resource);
-            String table = resource.type().replace(".", "_");
-            built.createOrReplaceTempView(table);
+            built.createOrReplaceTempView(resource.table());
         }
         Dataset<Row> sql = factory.getSession().sql(sql());
         JavaRDD<R> map = sql.javaRDD().map(this::valueOf);
@@ -82,7 +81,7 @@ public abstract class DataBlock<R extends Serializable> implements Resource {
         String and = "";
         StringBuilder sb = new StringBuilder();
         Set<String> fields = Stream.of((record().getClass().getDeclaredFields())).map(Field::getName).collect(Collectors.toSet());
-        for (Map.Entry<String, Object> entry : dimensions().entrySet()) {
+        for (Map.Entry<String, ?> entry : dimensions().entrySet()) {
             if (!fields.contains(entry.getKey()))
                 continue;
             String var = "_" + entry.getKey();

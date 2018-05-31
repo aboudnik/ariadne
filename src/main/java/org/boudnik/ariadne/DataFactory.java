@@ -1,14 +1,12 @@
 package org.boudnik.ariadne;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.SparkSession;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 /**
  * @author Alexandre_Boudnik
@@ -17,27 +15,25 @@ import java.util.logging.Logger;
 public class DataFactory {
     private final Map<String, DataSource> dataSources = new HashMap<>();
     private final Map<Resource.Key, Dataset> resources = new HashMap<>();
-    private SparkSession spark = SparkSession
+    private final SparkSession spark = SparkSession
             .builder()
             .appName("Java Spark SQL basic example")
             .master("local[*]")
             .getOrCreate();
 
-    DataFactory(DataSource... dataSources) {
-        for (DataSource dataSource : dataSources) {
-            this.dataSources.put(dataSource.clazz.getName(), dataSource);
-        }
-    }
-
     public static Logger LOGGER;
 
     static {
-        try (InputStream config = DataFactory.class.getClassLoader().getResourceAsStream("logging.properties")) {
-            LogManager.getLogManager().readConfiguration(config);
-            LOGGER = Logger.getLogger(DataFactory.class.getName());
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
+
+        LOGGER = Logger.getLogger("org.boudnik.ariadne");
+        LOGGER.setLevel(Level.DEBUG);
+        Logger.getLogger("org.apache.spark").setLevel(Level.ERROR);
+        Logger.getLogger("org.apache.hadoop").setLevel(Level.ERROR);
+    }
+
+    DataFactory(DataSource... dataSources) {
+        for (DataSource dataSource : dataSources) {
+            this.dataSources.put(dataSource.clazz.getName(), dataSource);
         }
     }
 
@@ -49,8 +45,11 @@ public class DataFactory {
     <R> Dataset<R> build(Resource block) {
         Resource.Key key = block.key();
         Dataset dataset = resources.get(key);
-        if(dataset==null) {
+        if (dataset == null) {
+            DataFactory.LOGGER.info("BUILD " + key);
             resources.put(key, dataset = block.build(this));
+        } else {
+            DataFactory.LOGGER.info("REUSE " + key);
         }
         //noinspection unchecked
         return dataset;

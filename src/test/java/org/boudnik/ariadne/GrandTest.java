@@ -96,28 +96,23 @@ public class GrandTest {
 
     @Test
     public void traffic() {
-        Dataset<Traffic.Record> build = factory.build(traffic);
-        System.out.println("traffic = " + traffic + " " + build);
+        factory.build(traffic);
     }
 
     @Test
     public void hardware() {
-        Dataset<Hardware.Record> build = factory.build(hardware);
-        System.out.println("hardware = " + hardware + " " + build);
+        factory.build(hardware);
     }
 
     @Test
     public void hardware2() {
-        Dataset<Hardware.Record> build = factory.build(hardware);
-        System.out.println("hardware = " + hardware + " " + build);
-        build = factory.build(hardware);
-        System.out.println("hardware = " + hardware + " " + build);
+        factory.build(hardware);
+        factory.build(hardware);
     }
 
     @Test
     public void total() {
-        Dataset<Total.Record> build = factory.build(total);
-        System.out.println("total = " + total + " " + build);
+        factory.build(total);
     }
 
     @Test

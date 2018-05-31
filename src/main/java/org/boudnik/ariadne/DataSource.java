@@ -11,6 +11,7 @@ import java.util.function.BiFunction;
 
 /**
  * @author Alexandre_Boudnik
+ * @author Sergey Nuyanzin
  * @since 05/22/2018
  */
 public class DataSource<R> {

@@ -38,7 +38,7 @@ public class Device extends DataBlock<Hardware.Record> {
     @Override
     public Set<Resource> prerequisites() {
         Map<String, ?> dimensions = dimensions();
-        return new HashSet<Resource>(Arrays.asList(
+        return dimensions(
                 new Status(
                         new Dimension("month", dimensions.get("month")),
                         new Dimension("state", dimensions.get("state")),
@@ -49,6 +49,6 @@ public class Device extends DataBlock<Hardware.Record> {
                         new Dimension("state", dimensions.get("state")),
                         new Dimension("city", dimensions.get("city"))
                 )
-        ));
+        );
     }
 }
