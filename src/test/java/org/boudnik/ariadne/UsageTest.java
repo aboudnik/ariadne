@@ -85,19 +85,4 @@ public class UsageTest {
         DataFactory.LOGGER.info("*");
         DataFactory.LOGGER.info("device = " + factory.build(usage));
     }*/
-
-    @Test
-    public void buildAndCachePartual1() throws NoSuchMethodException {
-        Collection<Usage.Record> records = new ArrayList<Usage.Record>() {{
-            add(record("Leesburg", "VA", "2018-01-01"));
-            add(record("Leesburg", "VA", "2018-01-01"));
-            add(record("Leesburg", "VA", "2018-01-01"));
-            add(record("Leesburg", "VA1", "2018-01-02"));
-            add(record("Leesburg", "VA", "2018-01-01"));
-            add(record("Leesbu4rg", "VA", "2018-03-01"));
-            add(record("Leesburg", "VA", "2018-01-01"));
-            add(record("Lee4sburg", "VA", "2018-01-01"));
-        }};
-        DataFactory.LOGGER.info(String.valueOf(records.stream().filter(usage.lambda()).count()));
-    }
 }

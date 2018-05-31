@@ -7,15 +7,15 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-import org.boudnik.ariadne.handlers.SerializablePredicate;
+import org.mvel2.MVEL;
+import org.mvel2.ParserContext;
 import org.mvel2.templates.TemplateRuntime;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.Map;
-import java.util.Objects;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Alexandre_Boudnik
@@ -72,48 +72,28 @@ public abstract class DataBlock<R extends Serializable> implements Resource {
         return dataset;
     }
 
-    public SerializablePredicate<R> lambda() throws NoSuchMethodException {
-        @SuppressWarnings("unchecked") SerializablePredicate<R> predicate = SerializablePredicate.TRUE_PREDICATE;
-        Class clazz = getClass().getDeclaredMethod("record").getReturnType();
-        Map<String, Field> fieldMap = FieldsCache.getInstance().getFieldsMap(clazz);
-        for (Map.Entry<String, ?> dimension : dimensions().entrySet()) {
-
-            DataFactory.LOGGER.fine(dimension.getKey() + " " + dimension.getValue());
-            Field field;
-            if ((field = fieldMap.get(dimension.getKey())) == null) {
-                continue;
-            }
-            predicate = predicate.and(o -> {
-                try {
-                    DataFactory.LOGGER.fine("res " + field.getDeclaringClass().getCanonicalName()
-                            + " " + field.getName() + " " + dimension.getValue() + " to check  " + o);
-
-                    return Objects.equals(o.getClass(), clazz) && Objects.equals(field.get(o), dimension.getValue());
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                }
-            });
-        }
-        return predicate;
-    }
-
     private String eval(String template) {
         return (String) TemplateRuntime.eval(template, dimensions());
     }
 
     private Function<R, Boolean> getFilter() {
-        Function<R, Boolean> p = t -> true;
-        Class clazz = record().getClass();
-        for (Map.Entry<String, Field> entry : FieldsCache.getInstance().getFieldsMap(clazz).entrySet()) {
-            Object expected = dimensions().get(entry.getKey());
-            if (expected != null) {
-                String name = entry.getValue().getName();
-                Function<R, Boolean> finalP = p;
-                p = t -> finalP.call(t) && Objects.equals(expected, clazz.getField(name).get(t));
-            }
+        Map<String, Object> vars = new HashMap<>();
+        ParserContext context = new ParserContext();
+        String and = "";
+        StringBuilder sb = new StringBuilder();
+        Set<String> fields = Stream.of((record().getClass().getDeclaredFields())).map(Field::getName).collect(Collectors.toSet());
+        for (Map.Entry<String, Object> entry : dimensions().entrySet()) {
+            if (!fields.contains(entry.getKey()))
+                continue;
+            String var = "_" + entry.getKey();
+            vars.put(var, entry.getValue());
+            context.withInput(var, entry.getValue().getClass());
+            sb.append(and);
+            and = " && ";
+            sb.append(var).append(".equals(").append(entry.getKey()).append(")");
         }
-        return p;
+        Serializable expression = MVEL.compileExpression(sb.toString(), context);
+        return o -> (Boolean) MVEL.executeExpression(expression, o, vars);
     }
 
     Dataset<R> save(DataSource<R> dataSource, Dataset<R> dataset) {
