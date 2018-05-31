@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 /**
  * @author Alexandre_Boudnik
+ * @author Sergey Nuyanzin
  * @since 05/24/2018
  */
 public abstract class External<R extends Serializable> extends DataBlock<R> {

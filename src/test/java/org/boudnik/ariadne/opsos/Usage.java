@@ -6,8 +6,6 @@ import org.boudnik.ariadne.Dimension;
 import org.boudnik.ariadne.Resource;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,12 +15,13 @@ import java.util.Set;
  */
 public class Usage extends DataBlock<Usage.Record> {
 
+    @SuppressWarnings({"unused", "WeakerAccess"})
     public static class Record implements Serializable {
-        String state;
-        String city;
-        int device;
-        String month;
-        double gigabytes;
+        private String state;
+        private String city;
+        private int device;
+        private String month;
+        private double gigabytes;
 
         public String getState() {
             return state;
@@ -87,7 +86,7 @@ public class Usage extends DataBlock<Usage.Record> {
     @Override
     public Set<Resource> prerequisites() {
         Map<String, ?> dimensions = dimensions();
-        return new HashSet<>(Arrays.asList(
+        return dimensions(
                 new Traffic(
                         new Dimension("month", dimensions.get("month")),
                         new Dimension("state", dimensions.get("state"))
@@ -104,7 +103,7 @@ public class Usage extends DataBlock<Usage.Record> {
                         new Dimension("month", dimensions.get("month")),
                         new Dimension("operational", true)
                 ).as("online")
-        ));
+        );
     }
 
 }

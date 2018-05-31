@@ -20,10 +20,11 @@ public class Hardware extends External<Hardware.Record> {
         return hardware;
     }
 
+    @SuppressWarnings({"unused", "WeakerAccess"})
     public static class Record implements Serializable {
-        public int device;
-        public String state;
-        public String city;
+        private int device;
+        private String state;
+        private String city;
 
         public int getDevice() {
             return device;

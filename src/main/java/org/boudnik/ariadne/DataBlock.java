@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 
 /**
  * @author Alexandre_Boudnik
+ * @author Sergey Nuyanzin
  * @since 05/23/2018
  */
 public abstract class DataBlock<R extends Serializable> implements Resource {
@@ -36,12 +37,12 @@ public abstract class DataBlock<R extends Serializable> implements Resource {
 
     public DataBlock(Dimension... dimensions) {
         for (Dimension dimension : dimensions) {
-            this.dimensions().put(dimension.name, dimension.limit);
+            this.dimensions.put(dimension.name, dimension.limit);
         }
     }
 
     @Override
-    public final Map<String, Object> dimensions() {
+    public final Map<String, ?> dimensions() {
         return dimensions;
     }
 
@@ -82,7 +83,7 @@ public abstract class DataBlock<R extends Serializable> implements Resource {
         String and = "";
         StringBuilder sb = new StringBuilder();
         Set<String> fields = Stream.of((record().getClass().getDeclaredFields())).map(Field::getName).collect(Collectors.toSet());
-        for (Map.Entry<String, Object> entry : dimensions().entrySet()) {
+        for (Map.Entry<String, ?> entry : dimensions().entrySet()) {
             if (!fields.contains(entry.getKey()))
                 continue;
             String var = "_" + entry.getKey();

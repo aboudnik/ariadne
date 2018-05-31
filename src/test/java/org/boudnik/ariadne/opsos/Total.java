@@ -34,13 +34,12 @@ public class Total extends DataBlock<Total.Record> {
         return record;
     }
 
+    @SuppressWarnings({"unused", "WeakerAccess"})
     public static class Record implements Serializable {
-        public Double total;
-
+        private Double total;
         public Double getTotal() {
             return total;
         }
-
         public void setTotal(Double total) {
             this.total = total;
         }
@@ -54,11 +53,11 @@ public class Total extends DataBlock<Total.Record> {
     @Override
     public Set<Resource> prerequisites() {
         Map<String, ?> dimensions = dimensions();
-        return new HashSet<>(Arrays.asList(
+        return dimensions(
                 new Traffic(
                         new Dimension("month", dimensions.get("month")),
                         new Dimension("state", dimensions.get("state"))
                 )
-        ));
+        );
     }
 }
