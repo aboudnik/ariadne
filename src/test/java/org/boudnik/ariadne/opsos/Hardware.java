@@ -14,7 +14,8 @@ public class Hardware extends External<Hardware.Record> {
     @Override
     public Record valueOf(Row row) {
         Record hardware = new Record();
-        hardware.setDevice(Integer.valueOf(row.getString(0)));
+        Object device = row.get(0);
+        hardware.setDevice(device instanceof Integer? (int) device : Integer.valueOf((String)device));
         hardware.setState(row.getString(1));
         hardware.setCity(row.getString(2));
         return hardware;
