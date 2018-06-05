@@ -25,14 +25,14 @@ public class DataSourceTest {
         url = new URL(spec);
     }
 
-    @Test
-    public void openFileStream() throws IOException {
-        DataSource dataSource = new DataSource(spec);
-        InputStream inputStream = dataSource.openStream();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-            for (String line; (line = reader.readLine()) != null; ) {
-                System.out.println("line = " + line);
-            }
-        }
-    }
+//    @Test
+//    public void openFileStream() throws IOException {
+//        DataSource dataSource = new DataSource(spec);
+//        InputStream inputStream = dataSource.openStream();
+//        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+//            for (String line; (line = reader.readLine()) != null; ) {
+//                System.out.println("line = " + line);
+//            }
+//        }
+//    }
 }

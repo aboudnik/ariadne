@@ -1,17 +1,55 @@
 package org.boudnik.ariadne.opsos;
 
+import org.apache.spark.sql.Row;
 import org.boudnik.ariadne.Dimension;
 import org.boudnik.ariadne.External;
+
+import java.io.Serializable;
 
 /**
  * @author Alexandre_Boudnik
  * @since 05/18/2018
  */
 public class Hardware extends External<Hardware.Record> {
-    public static class Record {
-        int device;
-        String state;
-        String city;
+    @Override
+    public Record valueOf(Row row) {
+        Record hardware = new Record();
+        Object device = row.get(0);
+        hardware.setDevice(device instanceof Integer? (int) device : Integer.valueOf((String)device));
+        hardware.setState(row.getString(1));
+        hardware.setCity(row.getString(2));
+        return hardware;
+    }
+
+    @SuppressWarnings({"unused", "WeakerAccess"})
+    public static class Record implements Serializable {
+        private int device;
+        private String state;
+        private String city;
+
+        public int getDevice() {
+            return device;
+        }
+
+        public void setDevice(int device) {
+            this.device = device;
+        }
+
+        public String getState() {
+            return state;
+        }
+
+        public void setState(String state) {
+            this.state = state;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public void setCity(String city) {
+            this.city = city;
+        }
 
         @Override
         public String toString() {

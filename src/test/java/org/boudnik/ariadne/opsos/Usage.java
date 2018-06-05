@@ -1,11 +1,11 @@
 package org.boudnik.ariadne.opsos;
 
+import org.apache.spark.sql.Row;
 import org.boudnik.ariadne.DataBlock;
 import org.boudnik.ariadne.Dimension;
 import org.boudnik.ariadne.Resource;
 
-import java.util.Arrays;
-import java.util.HashSet;
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,22 +15,58 @@ import java.util.Set;
  */
 public class Usage extends DataBlock<Usage.Record> {
 
-    public static class Record {
-        String state;
-        String city;
-        int device;
-        String month;
-        double gigabytes;
+    @SuppressWarnings({"unused", "WeakerAccess"})
+    public static class Record implements Serializable {
+        private String state;
+        private String city;
+        private int device;
+        private String month;
+        private double gigabytes;
 
-        public Record(String city, String state, String month) {
+        public String getState() {
+            return state;
+        }
+
+        public void setState(String state) {
             this.state = state;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public void setCity(String city) {
             this.city = city;
+        }
+
+        public int getDevice() {
+            return device;
+        }
+
+        public void setDevice(int device) {
+            this.device = device;
+        }
+
+        public String getMonth() {
+            return month;
+        }
+
+        public void setMonth(String month) {
             this.month = month;
         }
 
-        public Record() {
-
+        public double getGigabytes() {
+            return gigabytes;
         }
+
+        public void setGigabytes(double gigabytes) {
+            this.gigabytes = gigabytes;
+        }
+    }
+
+    @Override
+    public String sql() {
+        return null;
     }
 
     @Override
@@ -38,8 +74,9 @@ public class Usage extends DataBlock<Usage.Record> {
         return new Record();
     }
 
-    public Record record(String city, String state, String month) {
-        return new Record(city, state, month);
+    @Override
+    public Record valueOf(Row row) {
+        return null;
     }
 
     public Usage(Dimension... dims) {
@@ -47,9 +84,9 @@ public class Usage extends DataBlock<Usage.Record> {
     }
 
     @Override
-    public Set<? extends Resource> prerequisites() {
+    public Set<Resource> prerequisites() {
         Map<String, ?> dimensions = dimensions();
-        return new HashSet<>(Arrays.asList(
+        return dimensions(
                 new Traffic(
                         new Dimension("month", dimensions.get("month")),
                         new Dimension("state", dimensions.get("state"))
@@ -66,7 +103,7 @@ public class Usage extends DataBlock<Usage.Record> {
                         new Dimension("month", dimensions.get("month")),
                         new Dimension("operational", true)
                 ).as("online")
-        ));
+        );
     }
 
 }
