@@ -195,6 +195,64 @@ public class GrandTest {
     }
 
     @Test
+    public void testCsv2H2() throws SQLException {
+        final String h2Url = "jdbc:h2:" + server.getURL() + "/~/DB";
+        try {
+            Class.forName("org.h2.Driver");
+            try (Connection connection = DriverManager.getConnection(h2Url, SA_USER, SA_PASSWORD)) {
+
+                try(Statement stmt = connection.createStatement()) {
+
+                    stmt.execute("DROP TABLE IF EXISTS " + HARDWARE_OUTPUT);
+
+                    factory = new DataFactory(
+                            new DataSource(
+                                    Hardware.class,
+                                    Hardware.Record.class,
+                                    Paths.get(EXTERNAL, "opsos", "devices.csv"),
+                                    Paths.get(CACHE, "devices", "${state}"),
+
+                                    new BiFunction<DataFrameReader, String, Dataset<Row>>() {
+                                        @Override
+                                        public Dataset<Row> apply(DataFrameReader dataFrameReader, String s) {
+                                            return dataFrameReader.csv(Paths.get(EXTERNAL, "opsos", "devices.csv").toAbsolutePath().toString());
+                                        }
+                                    },
+                                    new BiConsumer<DataFrameWriter, String>() {
+                                        @Override
+                                        public void accept(DataFrameWriter dataFrameWriter, String s) {
+                                            dataFrameWriter.jdbc(h2Url, HARDWARE_OUTPUT, PROPERTIES);
+                                        }
+                                    }
+                            )
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+        Dataset<Hardware.Record> build = factory.build(hardware);
+
+        try(Connection connection = DriverManager.getConnection(h2Url, SA_USER, SA_PASSWORD)){
+            try {
+                Statement stmt = connection.createStatement();
+                String SelectQueryOutput = "select * from " + HARDWARE_OUTPUT;
+                ResultSet rsOutput = stmt.executeQuery(SelectQueryOutput);
+                while (rsOutput.next()) {
+                    System.out.println("Device " + rsOutput.getInt("device") + " City "
+                            + rsOutput.getString("city") + " State " + rsOutput.getString("state"));
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        System.out.println("hardware = " + hardware + " " + build);
+    }
+
+    @Test
     public void testH2ToCsv() throws SQLException {
         final String h2Url = "jdbc:h2:" + server.getURL() + "/~/DB";
         try {
