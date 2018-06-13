@@ -62,8 +62,8 @@ public class ForkJoinTest {
             for (int i = 0; i < node.children.length; i++)
                 (tasks[i] = new Task(node.children[i])).fork();
             StringBuilder s = new StringBuilder();
-            for (int i = 0; i < node.children.length; i++)
-                s.append(tasks[i].join());
+            for (Task task : tasks)
+                s.append(task.join());
             return s + " " + node.n;
         }
     }
