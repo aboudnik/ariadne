@@ -1,8 +1,8 @@
-/*
 package org.boudnik.ariadne;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -13,14 +13,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
-*/
 /**
  * @author Alexandre_Boudnik
  * @since 05/04/2018
- *//*
+ */
 
 @RunWith(MockitoJUnitRunner.class)
 public class ResourceTest {
@@ -39,11 +37,13 @@ public class ResourceTest {
         when(prerequisite.isReady()).thenReturn(true);
     }
 
+    @Ignore("Deprecated")
     @Test
     public void type() {
         assertSame("Test", resource.type());
     }
 
+    @Ignore("Deprecated")
     @Test
     public void prerequisites() {
         Set<Resource> prerequisites = resource.prerequisites();
@@ -51,6 +51,7 @@ public class ResourceTest {
         assertTrue(prerequisites.contains(prerequisite));
     }
 
+    @Ignore("Deprecated")
     @Test
     public void isReady() {
         assertTrue(prerequisite.isReady());
@@ -60,4 +61,4 @@ public class ResourceTest {
     @After
     public void tearDown() {
     }
-}*/
+}
