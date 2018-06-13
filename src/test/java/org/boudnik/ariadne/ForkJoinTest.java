@@ -1,6 +1,5 @@
 package org.boudnik.ariadne;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.concurrent.ForkJoinPool;
