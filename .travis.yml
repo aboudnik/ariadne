@@ -1,4 +1,43 @@
-# simple yml
+sudo: required
+dist: trusty
+
+cache:
+  directories:
+  - $HOME/.m2
+
+# do not cache our own artifacts
+before_cache:
+  - rm -rf $HOME/.m2/repository/org/boudnik/ariadne/
+
+install: true
+
 language: java
-sudo: true
-script: mvn clean verify 
+
+matrix:
+  fast_finish: true
+  include:
+    - env: IMAGE=maven:3-jdk-10
+    - env: IMAGE=maven:3-jdk-9
+    - env: IMAGE=maven:3-jdk-8
+
+env:
+  global:
+  - DOCKERRUN="docker run -it --rm -v $PWD:/src -v $HOME/.m2:/root/.m2 -w /src"
+services:
+  - docker
+before_install:
+  - docker pull $IMAGE
+install:
+  # Print the Maven version, skip tests and javadoc
+  - $DOCKERRUN $IMAGE mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Djavax.net.ssl.trustStorePassword=changeit -B -V
+script:
+  # Print surefire output to the console instead of files
+  - unset _JAVA_OPTIONS
+  - $DOCKERRUN $IMAGE mvn -Dsurefire.useFile=false -Dsurefire.parallel= -Djavax.net.ssl.trustStorePassword=changeit test
+git:
+  depth: 10000
+sudo: required
+cache:
+  directories:
+    - $HOME/.m2
+# End .travis.yml
