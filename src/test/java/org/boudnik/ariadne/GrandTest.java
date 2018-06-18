@@ -4,7 +4,6 @@ package org.boudnik.ariadne;
 import org.apache.spark.sql.DataFrameReader;
 import org.apache.spark.sql.DataFrameWriter;
 import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
 import org.boudnik.ariadne.opsos.Hardware;
 import org.boudnik.ariadne.opsos.Total;
 import org.boudnik.ariadne.opsos.Traffic;
@@ -18,10 +17,6 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.sql.*;
 import java.util.Properties;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-
-import static junit.framework.TestCase.assertEquals;
 
 /**
  * @author Alexandre_Boudnik
@@ -148,24 +143,14 @@ public class GrandTest {
                     stmt.execute("INSERT INTO " + HARDWARE_TABLE + " (device, state, city) values (207, 'VA', 'Leesburg')");
 
                     factory = new DataFactory(
-                            new DataSource(
+                            new DataSource<>(
                                     Hardware.class,
                                     Hardware.Record.class,
                                     Paths.get(EXTERNAL, "opsos", "devices.csv"),
                                     Paths.get(CACHE, "devices", "${state}"),
 
-                                    new BiFunction<DataFrameReader, String, Dataset<Row>>() {
-                                        @Override
-                                        public Dataset<Row> apply(DataFrameReader dataFrameReader, String s) {
-                                            return dataFrameReader.jdbc(h2Url, HARDWARE_TABLE, PROPERTIES);
-                                        }
-                                    },
-                                    new BiConsumer<DataFrameWriter, String>() {
-                                        @Override
-                                        public void accept(DataFrameWriter dataFrameWriter, String s) {
-                                            dataFrameWriter.jdbc(h2Url, HARDWARE_OUTPUT, PROPERTIES);
-                                        }
-                                    }
+                                    (dataFrameReader, s) -> dataFrameReader.jdbc(h2Url, HARDWARE_TABLE, PROPERTIES),
+                                    (dataFrameWriter, s) -> dataFrameWriter.jdbc(h2Url, HARDWARE_OUTPUT, PROPERTIES)
                             )
                     );
                 } catch (Exception e) {
@@ -191,6 +176,95 @@ public class GrandTest {
                 e.printStackTrace();
             }
         }
+        System.out.println("hardware = " + hardware + " " + build);
+    }
+
+    @Test
+    public void testCsv2H2() throws SQLException {
+        final String h2Url = "jdbc:h2:" + server.getURL() + "/~/DB";
+        try {
+            Class.forName("org.h2.Driver");
+            try (Connection connection = DriverManager.getConnection(h2Url, SA_USER, SA_PASSWORD)) {
+
+                try(Statement stmt = connection.createStatement()) {
+
+                    stmt.execute("DROP TABLE IF EXISTS " + HARDWARE_OUTPUT);
+
+                    factory = new DataFactory(
+                            new DataSource<>(
+                                    Hardware.class,
+                                    Hardware.Record.class,
+                                    Paths.get(EXTERNAL, "opsos", "devices.csv"),
+                                    Paths.get(CACHE, "devices", "${state}"),
+
+                                    (dataFrameReader, s) -> dataFrameReader.csv(Paths.get(EXTERNAL, "opsos", "devices.csv").toAbsolutePath().toString()),
+                                    (dataFrameWriter, s) -> dataFrameWriter.jdbc(h2Url, HARDWARE_OUTPUT, PROPERTIES)
+                            )
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+        Dataset<Hardware.Record> build = factory.build(hardware);
+
+        try(Connection connection = DriverManager.getConnection(h2Url, SA_USER, SA_PASSWORD)){
+            try {
+                Statement stmt = connection.createStatement();
+                String SelectQueryOutput = "select * from " + HARDWARE_OUTPUT;
+                ResultSet rsOutput = stmt.executeQuery(SelectQueryOutput);
+                while (rsOutput.next()) {
+                    System.out.println("Device " + rsOutput.getInt("device") + " City "
+                            + rsOutput.getString("city") + " State " + rsOutput.getString("state"));
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        System.out.println("hardware = " + hardware + " " + build);
+    }
+
+    @Test
+    public void testH2ToCsv() {
+        final String h2Url = "jdbc:h2:" + server.getURL() + "/~/DB";
+        try {
+            Class.forName("org.h2.Driver");
+            try (Connection connection = DriverManager.getConnection(h2Url, SA_USER, SA_PASSWORD)) {
+
+                try(Statement stmt = connection.createStatement()) {
+
+                    stmt.execute("DROP TABLE IF EXISTS " + HARDWARE_TABLE);
+                    stmt.execute("CREATE TABLE " + HARDWARE_TABLE + "(device int primary key, state varchar(255), city varchar(255))");
+                    stmt.execute("INSERT INTO " + HARDWARE_TABLE + " (device, state, city) values (101, 'MD', 'Rockville')");
+                    stmt.execute("INSERT INTO " + HARDWARE_TABLE + " (device, state, city) values (102, 'MD', 'Rockville')");
+                    stmt.execute("INSERT INTO " + HARDWARE_TABLE + " (device, state, city) values (103, 'MD', 'Rockville')");
+                    stmt.execute("INSERT INTO " + HARDWARE_TABLE + " (device, state, city) values (204, 'VA', 'Leesburg')");
+                    stmt.execute("INSERT INTO " + HARDWARE_TABLE + " (device, state, city) values (205, 'VA', 'Leesburg')");
+                    stmt.execute("INSERT INTO " + HARDWARE_TABLE + " (device, state, city) values (206, 'VA', 'Leesburg')");
+                    stmt.execute("INSERT INTO " + HARDWARE_TABLE + " (device, state, city) values (207, 'VA', 'Leesburg')");
+
+                    factory = new DataFactory(
+                            new DataSource<>(
+                                    Hardware.class,
+                                    Hardware.Record.class,
+                                    Paths.get(EXTERNAL, "opsos", "devices.csv"),
+                                    Paths.get(CACHE, "devices", "${state}"),
+
+                                    (dataFrameReader, s) -> dataFrameReader.jdbc(h2Url, HARDWARE_TABLE, PROPERTIES),
+                                    (dataFrameWriter, s) -> dataFrameWriter.csv(Paths.get(CACHE, "devices", "${state}").toAbsolutePath().toString())
+                            )
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+        Dataset<Hardware.Record> build = factory.build(hardware);
         System.out.println("hardware = " + hardware + " " + build);
     }
 
