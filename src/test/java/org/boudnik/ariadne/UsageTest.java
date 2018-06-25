@@ -2,6 +2,7 @@ package org.boudnik.ariadne;
 
 import org.boudnik.ariadne.opsos.*;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class UsageTest {
 
     }
 
+    @Ignore("Deprecated")
     @Test
     public void prerequisites() {
         System.out.println("usage = " + usage);
@@ -72,17 +74,19 @@ public class UsageTest {
         usage.print();
     }
 
-   /* @Test
+    @Ignore("Deprecated")
+    @Test
     public void buildAndCache() {
         DataFactory.LOGGER.info("device = " + factory.build(usage));
         DataFactory.LOGGER.info("*");
         DataFactory.LOGGER.info("device = " + factory.build(usage));
-    }*/
+    }
 
-/*    @Test
+    @Ignore("Deprecated")
+    @Test
     public void buildAndCachePartual() {
         DataFactory.LOGGER.info("device = " + factory.build(device));
         DataFactory.LOGGER.info("*");
         DataFactory.LOGGER.info("device = " + factory.build(usage));
-    }*/
+    }
 }
