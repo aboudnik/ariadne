@@ -13,6 +13,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class ForkJoinTest {
 
+    private static Stopwatch sw;
+
     static class Node {
         final String n;
         final Node[] children;
@@ -41,11 +43,13 @@ public class ForkJoinTest {
 
     @Test
     public void recursive() {
-        String invoke1 = new ForkJoinPool(1).invoke(new Task(root));
-        System.out.println("invoke1 = " + invoke1);
-        String invoke2 = new ForkJoinPool(2).invoke(new Task(root));
-        System.out.println("invoke2 = " + invoke2);
-        assertEquals(invoke1, invoke2);
+        String expected = " 1.1.1 1.1.2 1.1 1.2.1 1.2.2 1.2.3 1.2.4 1.2 1.3 1";
+        for (int i : new int[]{1, 2, 4, 8}) {
+            sw = new Stopwatch();
+            String actual = new ForkJoinPool(i).invoke(new Task(root));
+            System.out.printf("%d thread(s) %d secs %s%n", i, sw.seconds(), actual);
+            assertEquals(expected, actual);
+        }
     }
 
     static class Task extends RecursiveTask<String> {
@@ -57,7 +61,11 @@ public class ForkJoinTest {
 
         @Override
         protected String compute() {
-            System.out.println(Thread.currentThread());
+            System.out.println(Thread.currentThread() + " " + sw.seconds());
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ignored) {
+            }
             Task[] tasks = new Task[node.children.length];
             for (int i = 0; i < node.children.length; i++)
                 (tasks[i] = new Task(node.children[i])).fork();
@@ -66,5 +74,18 @@ public class ForkJoinTest {
                 s.append(task.join());
             return s + " " + node.n;
         }
+    }
+
+    static class Stopwatch {
+        long start = System.currentTimeMillis();
+
+        long mills() {
+            return System.currentTimeMillis() - start;
+        }
+
+        long seconds() {
+            return mills() / 1000;
+        }
+
     }
 }
