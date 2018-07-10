@@ -26,9 +26,10 @@ public class GrandTest {
 
     private static final String HARDWARE_TABLE = "HARDWARE";
     private static final String HARDWARE_OUTPUT = "HARDWARE_OUTPUT";
-    private static final String SA_USER = "sa";
-    private static final String SA_PASSWORD = "sa";
-    private static final Properties PROPERTIES = new Properties();
+    private static final Properties PROPERTIES = new Properties(){{
+        setProperty("user", "sa");
+        setProperty("password", "sa");
+    }};
 
     private static Server server;
     private Traffic traffic = new Traffic(
@@ -52,11 +53,9 @@ public class GrandTest {
     public static void start() {
         try {
             server = Server.createTcpServer().start();
-            String userDirProperty = System.getProperty("user.dir");
-            EXTERNAL = Paths.get(userDirProperty, "base", "external").toAbsolutePath().toString();
-            CACHE = Paths.get(userDirProperty, "base", "cache").toAbsolutePath().toString();
-            PROPERTIES.setProperty("user", SA_USER);
-            PROPERTIES.setProperty("password", SA_PASSWORD);
+            String currentDir = System.getProperty("user.dir");
+            EXTERNAL = Paths.get(currentDir, "base", "external").toAbsolutePath().toString();
+            CACHE = Paths.get(currentDir, "base", "cache").toAbsolutePath().toString();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -127,7 +126,7 @@ public class GrandTest {
         final String h2Url = "jdbc:h2:" + server.getURL() + "/~/DB";
         try {
             Class.forName("org.h2.Driver");
-            try (Connection connection = DriverManager.getConnection(h2Url, SA_USER, SA_PASSWORD)) {
+            try (Connection connection = DriverManager.getConnection(h2Url, PROPERTIES)) {
 
                 try(Statement stmt = connection.createStatement()) {
 
@@ -149,8 +148,8 @@ public class GrandTest {
                                     Paths.get(EXTERNAL, "opsos", "devices.csv"),
                                     Paths.get(CACHE, "devices", "${state}"),
 
-                                    (dataFrameReader, s) -> dataFrameReader.jdbc(h2Url, HARDWARE_TABLE, PROPERTIES),
-                                    (dataFrameWriter, s) -> dataFrameWriter.jdbc(h2Url, HARDWARE_OUTPUT, PROPERTIES)
+                                    (reader, s) -> reader.jdbc(h2Url, HARDWARE_TABLE, PROPERTIES),
+                                    (writer, s) -> writer.jdbc(h2Url, HARDWARE_OUTPUT, PROPERTIES)
                             )
                     );
                 } catch (Exception e) {
@@ -162,7 +161,7 @@ public class GrandTest {
         }
         Dataset<Hardware.Record> build = factory.build(hardware);
 
-        try(Connection connection = DriverManager.getConnection(h2Url, SA_USER, SA_PASSWORD)){
+        try(Connection connection = DriverManager.getConnection(h2Url, PROPERTIES)){
             try {
                 Statement stmt = connection.createStatement();
                 String SelectQueryOutput = "select * from " + HARDWARE_OUTPUT;
@@ -184,7 +183,7 @@ public class GrandTest {
         final String h2Url = "jdbc:h2:" + server.getURL() + "/~/DB";
         try {
             Class.forName("org.h2.Driver");
-            try (Connection connection = DriverManager.getConnection(h2Url, SA_USER, SA_PASSWORD)) {
+            try (Connection connection = DriverManager.getConnection(h2Url, PROPERTIES)) {
 
                 try(Statement stmt = connection.createStatement()) {
 
@@ -197,8 +196,8 @@ public class GrandTest {
                                     Paths.get(EXTERNAL, "opsos", "devices.csv"),
                                     Paths.get(CACHE, "devices", "${state}"),
 
-                                    (dataFrameReader, s) -> dataFrameReader.csv(Paths.get(EXTERNAL, "opsos", "devices.csv").toAbsolutePath().toString()),
-                                    (dataFrameWriter, s) -> dataFrameWriter.jdbc(h2Url, HARDWARE_OUTPUT, PROPERTIES)
+                                    (reader, s) -> reader.csv(Paths.get(EXTERNAL, "opsos", "devices.csv").toAbsolutePath().toString()),
+                                    (writer, s) -> writer.jdbc(h2Url, HARDWARE_OUTPUT, PROPERTIES)
                             )
                     );
                 } catch (Exception e) {
@@ -210,7 +209,7 @@ public class GrandTest {
         }
         Dataset<Hardware.Record> build = factory.build(hardware);
 
-        try(Connection connection = DriverManager.getConnection(h2Url, SA_USER, SA_PASSWORD)){
+        try(Connection connection = DriverManager.getConnection(h2Url, PROPERTIES)){
             try {
                 Statement stmt = connection.createStatement();
                 String SelectQueryOutput = "select * from " + HARDWARE_OUTPUT;
@@ -232,7 +231,7 @@ public class GrandTest {
         final String h2Url = "jdbc:h2:" + server.getURL() + "/~/DB";
         try {
             Class.forName("org.h2.Driver");
-            try (Connection connection = DriverManager.getConnection(h2Url, SA_USER, SA_PASSWORD)) {
+            try (Connection connection = DriverManager.getConnection(h2Url, PROPERTIES)) {
 
                 try(Statement stmt = connection.createStatement()) {
 
@@ -253,8 +252,8 @@ public class GrandTest {
                                     Paths.get(EXTERNAL, "opsos", "devices.csv"),
                                     Paths.get(CACHE, "devices", "${state}"),
 
-                                    (dataFrameReader, s) -> dataFrameReader.jdbc(h2Url, HARDWARE_TABLE, PROPERTIES),
-                                    (dataFrameWriter, s) -> dataFrameWriter.csv(Paths.get(CACHE, "devices", "${state}").toAbsolutePath().toString())
+                                    (reader, s) -> reader.jdbc(h2Url, HARDWARE_TABLE, PROPERTIES),
+                                    (writer, s) -> writer.csv(Paths.get(CACHE, "devices", "${state}").toAbsolutePath().toString())
                             )
                     );
                 } catch (Exception e) {
