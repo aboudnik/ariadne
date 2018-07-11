@@ -1,4 +1,4 @@
-package org.boudnik.ariadne;
+package org.apache.ariadne;
 
 /**
  * @author Alexandre_Boudnik

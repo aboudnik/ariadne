@@ -1,12 +1,11 @@
-package org.boudnik.ariadne.opsos;
+package org.apache.ariadne.opsos;
 
 import org.apache.spark.sql.Row;
-import org.boudnik.ariadne.Dimension;
-import org.boudnik.ariadne.External;
+import org.apache.ariadne.Dimension;
+import org.apache.ariadne.External;
 
 import java.io.Serializable;
 import java.sql.Date;
-import java.util.function.Function;
 
 /**
  * @author Alexandre_Boudnik

@@ -1,11 +1,11 @@
-package org.boudnik.ariadne.spark;
+package org.apache.ariadne.spark;
 
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.SparkSession;
-import org.boudnik.ariadne.opsos.Traffic;
+import org.apache.ariadne.opsos.Traffic;
 import org.junit.Ignore;
 import org.junit.Test;
 

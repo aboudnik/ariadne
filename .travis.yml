@@ -7,7 +7,7 @@ cache:
 
 # do not cache our own artifacts
 before_cache:
-  - rm -rf $HOME/.m2/repository/org/boudnik/ariadne/
+  - rm -rf $HOME/.m2/repository/org/apache/ariadne/
 
 install: true
 

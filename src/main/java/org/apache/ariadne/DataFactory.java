@@ -1,4 +1,4 @@
-package org.boudnik.ariadne;
+package org.apache.ariadne;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -25,7 +25,7 @@ public class DataFactory {
 
     static {
 
-        LOGGER = Logger.getLogger("org.boudnik.ariadne");
+        LOGGER = Logger.getLogger("org.apache.ariadne");
         LOGGER.setLevel(Level.DEBUG);
         Logger.getLogger("org.apache.spark").setLevel(Level.ERROR);
         Logger.getLogger("org.apache.hadoop").setLevel(Level.ERROR);
