@@ -1,10 +1,10 @@
-package org.boudnik.ariadne.opsos;
+package org.apache.ariadne.opsos;
 
 
 import org.apache.spark.sql.Row;
-import org.boudnik.ariadne.DataBlock;
-import org.boudnik.ariadne.Dimension;
-import org.boudnik.ariadne.Resource;
+import org.apache.ariadne.DataBlock;
+import org.apache.ariadne.Dimension;
+import org.apache.ariadne.Resource;
 
 import java.io.Serializable;
 import java.util.Arrays;

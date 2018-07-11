@@ -1,4 +1,4 @@
-package org.boudnik.ariadne;
+package org.apache.ariadne;
 
 import java.util.Map;
 import java.util.function.Supplier;
