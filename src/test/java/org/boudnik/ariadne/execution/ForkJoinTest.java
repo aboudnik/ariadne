@@ -1,14 +1,17 @@
-package org.boudnik.ariadne;
+package org.boudnik.ariadne.execution;
 
 import org.apache.ignite.Ignite;
 import org.apache.ignite.Ignition;
-import org.apache.ignite.lang.IgniteBiClosure;
-import org.apache.ignite.lang.IgniteClosure;
+import org.boudnik.ariadne.Builder;
+import org.boudnik.ariadne.DAG;
+import org.boudnik.ariadne.Node;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
-import java.util.function.Supplier;
+import java.util.function.BiFunction;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -20,24 +23,25 @@ import static org.junit.Assert.assertNull;
 public class ForkJoinTest {
 
     private static final int MILLIS = 200;
+    private static final String EXPECTED = "1.1.1 1.1.2 1.1 1.2.1 1.2.2 1.2.3 1.2.4 1.2 1.3 1";
 
-    static class TreeNode implements TreeTask.Node<String> {
+    static class TreeNode implements Node<String> {
         private final String n;
-        private final TreeNode[] children;
+        private final Collection<Node<String>> children;
 
         @Override
-        public TreeNode[] getChildren() {
+        public Collection<Node<String>> getChildren() {
             return children;
         }
 
         @Override
-        public String getN() {
+        public String payload() {
             return n;
         }
 
         TreeNode(String n, TreeNode... children) {
             this.n = n;
-            this.children = children;
+            this.children = Arrays.asList(children);
         }
     }
 
@@ -59,46 +63,49 @@ public class ForkJoinTest {
 
             );
 
-    private IgniteClosure<TreeTask.Node<String>, String> builder = node -> {
+    private static String sleep(Builder<String> function, Node<String> node) {
         try {
             Thread.sleep(MILLIS);
         } catch (InterruptedException ignored) {
         }
-        return node.getN();
-    };
+        return function.apply(node);
+    }
 
-    private IgniteBiClosure<String, String, String> combiner = (s1, s2) -> (s1 == null ? "" : (s1 + " ")) + s2;
+    private final BiFunction<String, String, String> combiner = (s1, s2) -> (s1 == null ? "" : s1 + " ") + s2;
 
+    private final Builder<String> builder = node -> sleep(Node::payload, node);
 
     @Test
     public void recursive() {
-        run(() -> new TreeTask<>(root, builder, combiner));
+        run(new DAG<>(root, builder, combiner));
     }
 
     @Test
     public void noCombiner() {
-        assertNull(new ForkJoinPool(1).invoke(new TreeTask<>(root, builder, (s1, s2) -> null)));
+        assertNull(new ForkJoinPool().invoke(new DAG<>(root, builder)));
     }
 
     @Test
     public void recursiveOnIgnite() {
         try (Ignite ignite = Ignition.start()) {
-            run(() -> new TreeTask<>(root, node -> ignite.compute().apply(builder, node), combiner));
+            run(new DAG<>(root, builder, combiner, (f, n) -> ignite.compute().apply(f::apply, n)));
         }
     }
 
-    private void run(Supplier<RecursiveTask<String>> supplier) {
-        String expected = "1.1.1 1.1.2 1.1 1.2.1 1.2.2 1.2.3 1.2.4 1.2 1.3 1";
+    private void run(RecursiveTask<String> task) {
         for (int i : new int[]{1, 2, 4, 8}) {
             Stopwatch sw = new Stopwatch();
-            String actual = new ForkJoinPool(i).invoke(supplier.get());
+
+            String actual = new ForkJoinPool(i).invoke(task);
+
             System.out.printf("%d thread(s) %d secs %s%n", i, sw.seconds(), actual);
-            assertEquals(expected, actual);
+            assertEquals(EXPECTED, actual);
+
+            task.reinitialize();
         }
     }
 
-    static class Stopwatch {
-
+    private static class Stopwatch {
         long start = System.currentTimeMillis();
 
         long mills() {
@@ -108,6 +115,5 @@ public class ForkJoinTest {
         long seconds() {
             return mills() / MILLIS;
         }
-
     }
 }
