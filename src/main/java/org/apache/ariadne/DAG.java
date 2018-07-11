@@ -1,4 +1,4 @@
-package org.boudnik.ariadne;
+package org.apache.ariadne;
 
 import java.util.ArrayList;
 import java.util.Collection;

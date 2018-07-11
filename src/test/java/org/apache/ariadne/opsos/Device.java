@@ -5,6 +5,8 @@ import org.apache.ariadne.DataBlock;
 import org.apache.ariadne.Dimension;
 import org.apache.ariadne.Resource;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 

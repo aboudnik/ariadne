@@ -6,6 +6,7 @@ import org.apache.ariadne.External;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.function.Function;
 
 /**
  * @author Alexandre_Boudnik
