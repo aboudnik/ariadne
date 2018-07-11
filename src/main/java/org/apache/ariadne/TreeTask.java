@@ -1,4 +1,4 @@
-package org.boudnik.ariadne;
+package org.apache.ariadne;
 
 import org.apache.ignite.lang.IgniteBiClosure;
 import org.apache.ignite.lang.IgniteClosure;

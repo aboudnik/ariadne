@@ -1,4 +1,4 @@
-package org.boudnik.ariadne;
+package org.apache.ariadne;
 
 import org.junit.After;
 import org.junit.Before;

@@ -1,12 +1,12 @@
-package org.boudnik.ariadne;
+package org.apache.ariadne;
 
 
 import org.apache.spark.sql.DataFrameReader;
 import org.apache.spark.sql.DataFrameWriter;
 import org.apache.spark.sql.Dataset;
-import org.boudnik.ariadne.opsos.Hardware;
-import org.boudnik.ariadne.opsos.Total;
-import org.boudnik.ariadne.opsos.Traffic;
+import org.apache.ariadne.opsos.Hardware;
+import org.apache.ariadne.opsos.Total;
+import org.apache.ariadne.opsos.Traffic;
 import org.h2.tools.Server;
 import org.junit.AfterClass;
 import org.junit.Before;

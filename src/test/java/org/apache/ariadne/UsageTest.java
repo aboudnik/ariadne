@@ -1,12 +1,9 @@
-package org.boudnik.ariadne;
+package org.apache.ariadne;
 
-import org.boudnik.ariadne.opsos.*;
+import org.apache.ariadne.opsos.*;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * @author Alexandre_Boudnik
