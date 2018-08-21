@@ -33,7 +33,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.ignite</groupId>
-            <artifactId>ignite-core</artifactId>
+            <artifactId>ignite-spring</artifactId>
             <scope>compile</scope>
             <version>2.4.0</version>
         </dependency>
