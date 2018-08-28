@@ -1,6 +1,5 @@
 package org.apache.ariadne.template;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.mvel2.templates.CompiledTemplate;
 import org.mvel2.templates.TemplateCompiler;
@@ -36,10 +35,6 @@ public class TemplateTest {
         Instrument(String symbol) {
             this.symbol = symbol;
         }
-    }
-
-    @Before
-    public void setup() {
     }
 
     @Test
