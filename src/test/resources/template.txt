@@ -1,0 +1,4 @@
+bla-bla
+{INSTRUMENTS}
+@foreach{instrument : instruments}@{instrument.symbol}
+@end{}this is the end
