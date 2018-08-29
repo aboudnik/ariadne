@@ -3,6 +3,8 @@ package org.apache.ariadne;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.concurrent.RecursiveTask;
 import java.util.function.BiFunction;
 
@@ -52,5 +54,17 @@ public class DAG<T> extends RecursiveTask<T> {
 
         // apply the function and return combined result
         return combiner.apply(s, invoker.apply(function, node));
+    }
+
+    public T compute(final Executor executor) {
+        Collection<Node<T>> children = node.getChildren();
+        CompletableFuture<T> last =
+                CompletableFuture.supplyAsync(() -> function.apply(node), executor);
+        for (Node<T> childNode : children) {
+            last = CompletableFuture.supplyAsync(
+                    () -> new DAG<>(childNode, function, combiner).compute(executor))
+                    .thenCombine(last, combiner);
+        }
+        return last.join();
     }
 }
