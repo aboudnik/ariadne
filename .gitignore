@@ -1,4 +1,5 @@
 *.iml
 /target/
 /.idea/
+/.mvn/wrapper/*.jar
 /base/cache/

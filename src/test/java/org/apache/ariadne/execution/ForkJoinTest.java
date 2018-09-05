@@ -105,6 +105,33 @@ public class ForkJoinTest {
         }
     }
 
+    @Test
+    public void recursiveCF() {
+        runCompletableFuture(new DAG<>(root, builder, combiner));
+    }
+
+    private void runCompletableFuture(DAG<String> dagCF) {
+        for (int i : new int[]{1, 2, 4, 8}) {
+            Stopwatch sw = new Stopwatch();
+            String actual = dagCF.compute(new ForkJoinPool(i));
+            System.out.printf("%d thread(s) %d secs %s%n", i, sw.seconds(), actual);
+        }
+    }
+
+    @Test
+    public void noCombinerCompletableFuture() {
+        assertNull(new DAG<>(root, builder).compute(new ForkJoinPool(1)));
+    }
+
+    @Test
+    public void recursiveOnIgniteCompletableFuture() {
+        try (Ignite ignite = Ignition.start()) {
+            runCompletableFuture(
+                    new DAG<>(root, builder, combiner,
+                            (f, n) -> ignite.compute().apply(f::apply, n)));
+        }
+    }
+
     private static class Stopwatch {
         long start = System.currentTimeMillis();
 
