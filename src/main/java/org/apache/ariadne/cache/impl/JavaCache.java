@@ -9,11 +9,11 @@ import java.util.Map;
  * @author Alexandre_Boudnik
  * @since 09/07/2018
  */
-public class HashMapCache<K, V> extends AbstractTieredCache<K, V> {
+public class JavaCache<K, V> extends AbstractTieredCache<K, V> {
 
     private Map<K, V> map = new HashMap<>();
 
-    public HashMapCache(TieredCache<K, V> base) {
+    public JavaCache(TieredCache<K, V> base) {
         super(base);
     }
 

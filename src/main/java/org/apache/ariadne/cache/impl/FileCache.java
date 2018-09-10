@@ -9,14 +9,16 @@ import java.io.*;
  * @since 09/07/2018
  */
 public class FileCache<K, V> extends AbstractTieredCache<K, V> {
+    private final File dir;
 
-    public FileCache(TieredCache<K, V> base) {
+    public FileCache(String name, TieredCache<K, V> base) {
         super(base);
+        (dir = new File(name)).mkdirs();
     }
 
     @Override
     public V doGet(K key) {
-        File file = new File(key.toString());
+        File file = new File(dir, key.toString());
         if (file.exists())
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
                 //noinspection unchecked
@@ -29,7 +31,7 @@ public class FileCache<K, V> extends AbstractTieredCache<K, V> {
 
     @Override
     public void doPut(K key, V value) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(key.toString())))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(dir, key.toString())))) {
             oos.writeObject(value);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -38,6 +40,6 @@ public class FileCache<K, V> extends AbstractTieredCache<K, V> {
 
     @Override
     public boolean doRemove(K key) {
-        return new File(key.toString()).delete();
+        return new File(dir, key.toString()).delete();
     }
 }

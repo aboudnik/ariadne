@@ -7,10 +7,10 @@ import org.apache.ignite.Ignition;
  * @author Alexandre_Boudnik
  * @since 09/07/2018
  */
-public class IgniteCache<K, V> extends AbstractTieredCache<K, V> {
+public class GridCache<K, V> extends AbstractTieredCache<K, V> {
     private final org.apache.ignite.IgniteCache<K, V> cache;
 
-    public IgniteCache(String name, TieredCache<K, V> base) {
+    public GridCache(String name, TieredCache<K, V> base) {
         super(base);
         cache = Ignition.ignite().getOrCreateCache(name);
     }

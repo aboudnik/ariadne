@@ -1,8 +1,8 @@
 package org.apache.ariadne.cache;
 
 import org.apache.ariadne.cache.impl.FileCache;
-import org.apache.ariadne.cache.impl.HashMapCache;
-import org.apache.ariadne.cache.impl.IgniteCache;
+import org.apache.ariadne.cache.impl.JavaCache;
+import org.apache.ariadne.cache.impl.GridCache;
 import org.apache.ignite.Ignite;
 import org.apache.ignite.Ignition;
 import org.apache.ignite.configuration.IgniteConfiguration;
@@ -30,9 +30,9 @@ public class TieredCacheTest {
         ignite = Ignition.start(new IgniteConfiguration() {{
 //            setGridLogger(new Slf4jLogger());
         }});
-        file = new FileCache<>(null);
-        grid = new IgniteCache<>("grid", file);
-        java = new HashMapCache<>(grid);
+        file = new FileCache<>("file", null);
+        grid = new GridCache<>("grid", file);
+        java = new JavaCache<>(grid);
         file.put(1, "1");
         grid.put(2, "2");
         java.put(3, "3");
