@@ -1,6 +1,5 @@
 package org.apache.ariadne;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.SparkSession;
@@ -21,15 +20,7 @@ public class DataFactory {
             .master("local[*]")
             .getOrCreate();
 
-    public static Logger LOGGER;
-
-    static {
-
-        LOGGER = Logger.getLogger("org.apache.ariadne");
-        LOGGER.setLevel(Level.DEBUG);
-        Logger.getLogger("org.apache.spark").setLevel(Level.ERROR);
-        Logger.getLogger("org.apache.hadoop").setLevel(Level.ERROR);
-    }
+    static Logger LOGGER = Logger.getLogger("org.apache.ariadne");
 
     DataFactory(DataSource... dataSources) {
         for (DataSource dataSource : dataSources) {

@@ -1,8 +1,6 @@
 package org.apache.ariadne.cache;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import org.apache.log4j.Logger;
 
 /**
  * It implements the abilities to:
@@ -14,6 +12,9 @@ import org.slf4j.LoggerFactory;
  * @since 09/07/2018
  */
 public interface TieredCache<K, V> {
+
+    Logger LOGGER = Logger.getLogger("org.apache.ariadne");
+
     /**
      * Gets an entry from the cache.
      *
@@ -24,7 +25,8 @@ public interface TieredCache<K, V> {
     default V get(K key) {
         V v = doGet(key);
         if (v == null) {
-            logger().info("read through for {}", key);
+            if (LOGGER.isDebugEnabled())
+                LOGGER.debug("read through for " + key);
             return base() == null ? null : base().get(key);
         } else return v;
     }
@@ -49,10 +51,6 @@ public interface TieredCache<K, V> {
      */
     default boolean remove(K key) {
         return doRemove(key);
-    }
-
-    default Logger logger() {
-        return LoggerFactory.getLogger(getClass());
     }
 
     V doGet(K key);
