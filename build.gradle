@@ -1,0 +1,25 @@
+apply plugin: 'java'
+
+group = 'org.apache'
+version = '1.0.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compile(
+    "org.mvel:mvel2:${mvelVer}",
+    "org.apache.spark:spark-sql_2.11:${sparkVer}",
+    "org.apache.ignite:ignite-core:${igniteVer}",
+	)
+
+	testCompile(
+    "junit:junit:${junitVer}",
+    "org.mockito:mockito-core:${mockitoVer}",
+    "com.h2database:h2:${h2Ver}"
+	)
+}
