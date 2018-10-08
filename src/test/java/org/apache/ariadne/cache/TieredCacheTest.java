@@ -31,7 +31,7 @@ public class TieredCacheTest {
         ignite = Ignition.start();
         file = new FileCache<>("file", null);
         grid = new GridCache<>("grid", file);
-        java = new JavaCache<>(grid);
+        java = new JavaCache<>("java", grid);
         file.put(1, "1");
         grid.put(2, "2");
         java.put(3, "3");

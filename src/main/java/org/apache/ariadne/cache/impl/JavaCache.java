@@ -10,11 +10,13 @@ import java.util.Map;
  * @since 09/07/2018
  */
 public class JavaCache<K, V> extends AbstractTieredCache<K, V> {
+    private final String name;
 
     private Map<K, V> map = new HashMap<>();
 
-    public JavaCache(TieredCache<K, V> base) {
+    public JavaCache(String name, TieredCache<K, V> base) {
         super(base);
+        this.name = name;
     }
 
     @Override
