@@ -1,5 +1,6 @@
 package org.apache.ariadne;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -7,7 +8,7 @@ import java.util.Date;
  * @author Alexandre_Boudnik
  * @since 10/11/2018
  */
-public class TimeSeries {
+public class TimeSeries implements Serializable {
     private final long[] date;
     private final long[] asOf;
     private final int[] type;

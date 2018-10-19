@@ -29,7 +29,7 @@ public class TimeSeriesTest {
         ts = ts.add(oct07, 42, 133.55);
         ts = ts.add(oct07, oct08, 42, 131.11);
         ts = ts.add(oct07, 11, 133.55);
-        
+
         ts = ts.add(oct07, oct09, 42, 131.11);
 
         ts = ts.add(oct07, oct08, 11, 131.11);
