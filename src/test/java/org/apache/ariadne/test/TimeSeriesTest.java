@@ -1,6 +1,7 @@
 package org.apache.ariadne.test;
 
 import org.apache.ariadne.TimeSeries;
+import org.apache.ariadne.TimeSeriesImpl;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,7 +26,7 @@ public class TimeSeriesTest {
 
     @Test
     public void test1() {
-        TimeSeries ts = TimeSeries.START;
+        TimeSeries ts = TimeSeriesImpl.START;
         ts = ts.add(oct07, 42, 133.55);
         ts = ts.add(oct07, oct08, 42, 131.11);
         ts = ts.add(oct07, 11, 133.55);

@@ -1,6 +1,7 @@
 package org.apache.ariadne.test;
 
 import org.apache.ariadne.TimeSeries;
+import org.apache.ariadne.TimeSeriesImpl;
 import org.apache.ariadne.cache.TieredCache;
 import org.apache.ariadne.cache.impl.GridCache;
 import org.apache.ariadne.cache.impl.JavaCache;
@@ -44,7 +45,7 @@ public class PerformanceTimeSeries {
     }
 
     private TimeSeries get1000days() {
-        TimeSeries ts1000 = TimeSeries.START;
+        TimeSeries ts1000 = TimeSeriesImpl.START;
         long inception = java.sql.Date.valueOf("2016-10-07").getTime();
         for (int i = 0; i < DAYS; i++) {
             ts1000 = ts1000.add(new Date(inception + i * (1_000L * 24 * 3600)), 42, 133.55);

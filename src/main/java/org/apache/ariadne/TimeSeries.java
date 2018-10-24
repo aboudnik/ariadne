@@ -1,108 +1,80 @@
 package org.apache.ariadne;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 
 /**
  * @author Alexandre_Boudnik
- * @since 10/11/2018
+ * @since 10/24/2018
  */
-public class TimeSeries implements Serializable {
-    private final long[] date;
-    private final long[] asOf;
-    private final int[] type;
-    private final double[] rate;
+public interface TimeSeries extends Serializable {
 
-    private TimeSeries(long[] date, long[] asOf, int[] type, double[] rate) {
-        this.date = date;
-        this.asOf = asOf;
-        this.type = type;
-        this.rate = rate;
-    }
-
-    public final static TimeSeries START = new TimeSeries(0);
-
-    private TimeSeries(int size) {
-        this(new long[size], new long[size], new int[size], new double[size]);
-    }
-
-
-    private TimeSeries(long date, long asOf, int type, double rate) {
-        this(new long[]{date}, new long[]{asOf}, new int[]{type}, new double[]{rate});
-    }
-
-    private static int compare(final TimeSeries a, int iA, final TimeSeries b, int iB) {
-        int c = Long.compare(a.date[iA], b.date[iB]);
+    @Contract(pure = true)
+    default int compare(int iA, @NotNull TimeSeries that, int iB) {
+        int c = Long.compare(getDate(iA), that.getDate(iB));
         if (c == 0)
-            c = Integer.compare(a.type[iA], b.type[iB]);
+            c = Integer.compare(getType(iA), that.getType(iB));
         if (c == 0)
-            c = Long.compare(a.asOf[iA], b.asOf[iB]);
+            c = Long.compare(getAsOf(iA), that.getAsOf(iB));
         return c;
     }
 
-    public TimeSeries add(Date date, int type, double rate) {
-        return merge(new TimeSeries(date.getTime(), date.getTime(), type, rate));
+    @NotNull
+    @Contract("_ -> new")
+    TimeSeries createTimeSeries(int size);
+
+    @Contract(pure = true)
+    long getDate(int i);
+
+    @Contract(pure = true)
+    int getType(int i);
+
+    @Contract(pure = true)
+    long getAsOf(int i);
+
+    @Contract(pure = true)
+    double getRate(int i);
+
+    @Contract(pure = true)
+    int getLength();
+
+    default TimeSeries add(Date date, int type, double rate) {
+        return add(date, date, type, rate);
     }
 
-    public TimeSeries add(Date date, Date asOf, int type, double rate) {
-        return merge(new TimeSeries(date.getTime(), asOf.getTime(), type, rate));
-    }
+    TimeSeries add(Date date, Date asOf, int type, double rate);
 
-    @SuppressWarnings("WeakerAccess")
-    public TimeSeries merge(TimeSeries ts) {
-        TimeSeries r = new TimeSeries(this.date.length + ts.date.length);
-        int iA = 0, iB = 0;
-        while (iA < this.date.length && iB < ts.date.length) {
-            boolean less = compare(this, iA, ts, iB) < 0;
-            r.set(iA + iB, less ? this : ts, less ? iA++ : iB++);
+    default TimeSeries merge(TimeSeries that) {
+        int iA = 0, iB = 0, lenA = getLength(), lenB = that.getLength();
+        TimeSeries r = createTimeSeries(lenA + lenB);
+        while (iA < lenA && iB < lenB) {
+            boolean less = this.compare(iA, that, iB) < 0;
+            r.set(iA + iB, less ? this : that, less ? iA++ : iB++);
         }
-        while (iA < this.date.length)
+        while (iA < lenA)
             r.set(iA + iB, this, iA++);
-        while (iB < ts.date.length)
-            r.set(iA + iB, ts, iB++);
+        while (iB < lenB)
+            r.set(iA + iB, that, iB++);
         return r;
     }
 
-    private void set(int dst, TimeSeries ts, int src) {
-        this.date[dst] = ts.date[src];
-        this.asOf[dst] = ts.asOf[src];
-        this.type[dst] = ts.type[src];
-        this.rate[dst] = ts.rate[src];
-    }
+    void set(int dst, @NotNull TimeSeries that, int src);
 
-    @Override
-    public String toString() {
+    default String presentation() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0, length = date.length; i < length; i++) {
-            sb.append(String.format("%n%-23s %-23s %d %.2f", new Timestamp(date[i]), asOf[i] == date[i] ? "" : new Timestamp(asOf[i]), type[i], rate[i]));
+        for (int i = 0, length = getLength(); i < length; i++) {
+            sb.append(String.format("%n%-23s %-23s %d %.2f", new Timestamp(getDate(i)), getAsOf(i) == getDate(i) ? "" : new Timestamp(getAsOf(i)), getType(i), getRate(i)));
         }
         return sb.toString();
     }
 
-    public TimeSeries asOf(Date asOf) {
-        long asOfTime = asOf.getTime();
-        int length = date.length;
-        if (length == 0) {
-            return START;
-        }
-        TimeSeries ts = START;
-        int i = 0;
-        do {
-            int type = this.type[i];
-            long date = this.date[i];
-            int max = i;
-            for (; i < length && type == this.type[i] && date == this.date[i]; i++) {
-                if (asOfTime <= this.asOf[i]) {
-                    max = i;
-                }
-            }
-            ts = ts.merge(new TimeSeries(this.date[max], this.asOf[max], this.type[max], this.rate[max]));
-        } while (i < length && asOfTime >= this.date[i]);
-        return ts;
-    }
+    abstract TimeSeries asOf(Date asOf);
 
-    public TimeSeries asOfNow() {
+    default TimeSeries asOfNow() {
         return asOf(new Date());
     }
 }
