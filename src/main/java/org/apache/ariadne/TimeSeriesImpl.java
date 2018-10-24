@@ -9,7 +9,7 @@ import java.util.Date;
  * @author Alexandre_Boudnik
  * @since 10/11/2018
  */
-public class TimeSeriesImpl implements TimeSeries {
+public class TimeSeriesImpl extends AbstractTimeSeries {
     public static final TimeSeries START = new TimeSeriesImpl(0);
     private final long[] date;
     private final long[] asOf;
@@ -32,7 +32,10 @@ public class TimeSeriesImpl implements TimeSeries {
         this(new long[]{date}, new long[]{asOf}, new int[]{type}, new double[]{rate});
     }
 
-    private TimeSeriesImpl createTimeSeries(long date, long asOf, int type, double rate) {
+    @Override
+    @NotNull
+    @Contract("_, _, _, _ -> new")
+    protected TimeSeries createTimeSeries(long date, long asOf, int type, double rate) {
         return new TimeSeriesImpl(date, asOf, type, rate);
     }
 
@@ -74,11 +77,6 @@ public class TimeSeriesImpl implements TimeSeries {
     }
 
     @Override
-    public TimeSeries add(Date date, Date asOf, int type, double rate) {
-        return merge(createTimeSeries(date.getTime(), asOf.getTime(), type, rate));
-    }
-
-    @Override
     public void set(int dst, @NotNull TimeSeries that, int src) {
         this.date[dst] = that.getDate(src);
         this.asOf[dst] = that.getAsOf(src);
@@ -87,30 +85,7 @@ public class TimeSeriesImpl implements TimeSeries {
     }
 
     @Override
-    public TimeSeries asOf(Date asOf) {
-        long asOfTime = asOf.getTime();
-        int length = getLength();
-        if (length == 0) {
-            return START;
-        }
-        TimeSeries ts = START;
-        int i = 0;
-        do {
-            int type = getType(i);
-            long date = getDate(i);
-            int max = i;
-            for (; i < length && type == getType(i) && date == getDate(i); i++) {
-                if (asOfTime <= getAsOf(i)) {
-                    max = i;
-                }
-            }
-            ts = ts.merge(createTimeSeries(getDate(max), getAsOf(max), getType(max), getRate(max)));
-        } while (i < length && asOfTime >= getDate(i));
-        return ts;
-    }
-
-    @Override
-    public String toString() {
-        return presentation();
+    public TimeSeries getStart() {
+        return START;
     }
 }
