@@ -13,12 +13,16 @@ import java.util.Date;
 public abstract class AbstractTimeSeries implements TimeSeries {
 
     @NotNull
-    @Contract("_, _, _, _ -> new")
-    protected abstract TimeSeries createTimeSeries(long date, long asOf, int type, double rate);
+    @Contract("-> new")
+    protected abstract TimeSeries createTimeSeries();
 
     @NotNull
     @Contract("_ -> new")
-    public abstract TimeSeries createTimeSeries(int size);
+    protected abstract TimeSeries createTimeSeries(int size);
+
+    @NotNull
+    @Contract("_, _, _, _ -> new")
+    protected abstract TimeSeries createTimeSeries(long date, long asOf, int type, double rate);
 
     @Override
     public TimeSeries add(Date date, Date asOf, int type, double rate) {
@@ -27,12 +31,12 @@ public abstract class AbstractTimeSeries implements TimeSeries {
 
     @Override
     public TimeSeries asOf(Date asOf) {
-        long asOfTime = asOf.getTime();
         int length = getLength();
+        TimeSeries ts = createTimeSeries();
         if (length == 0) {
-            return getStart();
+            return ts;
         }
-        TimeSeries ts = getStart();
+        long asOfTime = asOf.getTime();
         int i = 0;
         do {
             int type = getType(i);
@@ -81,6 +85,4 @@ public abstract class AbstractTimeSeries implements TimeSeries {
             c = Long.compare(a.getAsOf(iA), b.getAsOf(iB));
         return c;
     }
-
-    public abstract TimeSeries getStart();
 }

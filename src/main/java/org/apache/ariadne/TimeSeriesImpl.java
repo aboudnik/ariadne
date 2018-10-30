@@ -3,8 +3,6 @@ package org.apache.ariadne;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Date;
-
 /**
  * @author Alexandre_Boudnik
  * @since 10/11/2018
@@ -34,16 +32,23 @@ public class TimeSeriesImpl extends AbstractTimeSeries {
 
     @Override
     @NotNull
-    @Contract("_, _, _, _ -> new")
-    protected TimeSeries createTimeSeries(long date, long asOf, int type, double rate) {
-        return new TimeSeriesImpl(date, asOf, type, rate);
+    @Contract("-> new")
+    protected TimeSeries createTimeSeries() {
+        return START;
     }
 
     @Override
     @NotNull
     @Contract("_ -> new")
-    public TimeSeries createTimeSeries(int size) {
+    protected TimeSeries createTimeSeries(int size) {
         return new TimeSeriesImpl(size);
+    }
+
+    @Override
+    @NotNull
+    @Contract("_, _, _, _ -> new")
+    protected TimeSeries createTimeSeries(long date, long asOf, int type, double rate) {
+        return new TimeSeriesImpl(date, asOf, type, rate);
     }
 
     @Override
@@ -82,10 +87,5 @@ public class TimeSeriesImpl extends AbstractTimeSeries {
         this.asOf[dst] = that.getAsOf(src);
         this.type[dst] = that.getType(src);
         this.rate[dst] = that.getRate(src);
-    }
-
-    @Override
-    public TimeSeries getStart() {
-        return START;
     }
 }
