@@ -1,4 +1,4 @@
-package org.apache.ariadne;
+package org.apache.bitemporal;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

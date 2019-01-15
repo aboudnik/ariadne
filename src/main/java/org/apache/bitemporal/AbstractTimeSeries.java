@@ -1,4 +1,4 @@
-package org.apache.ariadne;
+package org.apache.bitemporal;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -61,7 +61,7 @@ public abstract class AbstractTimeSeries implements TimeSeries {
         return sb.toString();
     }
 
-    @Override
+    @Override                                                                            
     public TimeSeries merge(@NotNull TimeSeries that) {
         int iA = 0, iB = 0, lenA = getLength(), lenB = that.getLength();
         TimeSeries r = createTimeSeries(lenA + lenB);

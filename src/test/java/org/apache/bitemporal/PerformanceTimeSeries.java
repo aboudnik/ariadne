@@ -1,7 +1,7 @@
-package org.apache.ariadne.test;
+package org.apache.bitemporal;
 
-import org.apache.ariadne.TimeSeries;
-import org.apache.ariadne.TimeSeriesImpl;
+import org.apache.bitemporal.TimeSeries;
+import org.apache.bitemporal.TimeSeriesImpl;
 import org.apache.ariadne.cache.TieredCache;
 import org.apache.ariadne.cache.impl.GridCache;
 import org.apache.ariadne.cache.impl.JavaCache;

@@ -1,10 +1,9 @@
-package org.apache.ariadne;
+package org.apache.bitemporal;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
 
 /**

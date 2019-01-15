@@ -1,7 +1,7 @@
-package org.apache.ariadne.test;
+package org.apache.bitemporal;
 
-import org.apache.ariadne.TimeSeries;
-import org.apache.ariadne.TimeSeriesImpl;
+import org.apache.bitemporal.TimeSeries;
+import org.apache.bitemporal.TimeSeriesImpl;
 import org.junit.Before;
 import org.junit.Test;
 
