@@ -5,6 +5,7 @@ import org.apache.ignite.Ignition;
 import org.apache.ariadne.Builder;
 import org.apache.ariadne.DAG;
 import org.apache.ariadne.Node;
+import org.apache.ignite.configuration.IgniteConfiguration;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -87,7 +88,7 @@ public class ForkJoinTest {
 
     @Test
     public void recursiveOnIgnite() {
-        try (Ignite ignite = Ignition.start()) {
+        try (Ignite ignite = Ignition.start(new IgniteConfiguration())) {
             run(new DAG<>(root, builder, combiner, (f, n) -> ignite.compute().apply(f::apply, n)));
         }
     }
@@ -125,7 +126,7 @@ public class ForkJoinTest {
 
     @Test
     public void recursiveOnIgniteCompletableFuture() {
-        try (Ignite ignite = Ignition.start()) {
+        try (Ignite ignite = Ignition.start(new IgniteConfiguration())) {
             runCompletableFuture(
                     new DAG<>(root, builder, combiner,
                             (f, n) -> ignite.compute().apply(f::apply, n)));

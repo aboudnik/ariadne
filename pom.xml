@@ -8,10 +8,11 @@
     <artifactId>ariadne-core</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <properties>
-        <ignite-core.version>[2.6,)</ignite-core.version>
+        <ignite-core.version>2.13.0</ignite-core.version>
+<!--        <ignite-core.version>[2.6,)</ignite-core.version>-->
     </properties>
 
-    <name>ariadne</name>
+    <name>ariadne</name>ZZ
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
